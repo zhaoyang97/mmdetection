@@ -1,0 +1,46 @@
+
+==========================
+coco
+
+resnet 结构的attention
+configs/carafe/coco_carafe_3_sa.py # hpc 2421
+configs/carafe/coco_carafe_sa_3.py # hpc 2422
+configs/carafe/coco_carafe_3_se.py # hpc 2423
+configs/carafe/coco_carafe_se_3.py # hpc 2424
+
+
+
+configs/carafe/voc_carafe_3_res3_norm.py              # rtx04
+configs/carafe/coco_mask_r101_carafe_3_res3_norm.py   # rtx04
+configs/carafe/coco_carafe_3_res3_norm.py             # hpc 2370
+configs/carafe/coco_mask_r50_carafe_3_res3_norm.py    # hpc 2375
+
+
+
+configs/carafe/coco_carafe_3_3_norm.py           # hpc 2282
+configs/carafe/coco_mask_r50_carafe_3_3_norm.py  # hpc 2286
+configs/carafe/coco_mask_r101_carafe_3_3_norm.py # hpc 2285 down 等着从新run
+
+configs/carafe/voc_carafe_3_3_norm.py            # hpc 2284
+
+
+configs/carafe/coco_carafe_norm.py           # hpc 2194 faster
+configs/carafe/coco_mask_r50_carafe_norm.py  # hpc 2195 mask
+
+configs/carafe/coco_carafe_3_sa.py # hpc 2222
+configs/carafe/coco_carafe_sa_3.py # hpc 2223
+configs/carafe/coco_carafe_3_se.py # hpc 2228
+configs/carafe/coco_carafe_se_3.py # hpc 2229
+
+
+
+==========================
+voc
+configs/carafe/voc_carafe_norm.py # hpc 2197
+configs/carafe/voc_carafe_3_sa.py # hpc 2198
+configs/carafe/voc_carafe_sa_3.py # hpc 2206
+configs/carafe/voc_carafe_3_se.py # hpc 2200
+configs/carafe/voc_carafe_se_3.py # hpc 2207
+
+
+

@@ -1,0 +1,11 @@
+faster rcnn | voc | 7h
+997  baseline.sh #
+998  cf.sh       # +carafe
+999  cf2.sh      # +carafe + 3*3
+1018 cfcuda.sh   # +cuda实现的carafe
+
+faster rcnn | coco
+1014 coco.sh        #
+1015 coco_cf.sh     # +carafe
+1016 coco_cf2.sh    # +carafe + 3*3
+1019 coco_cfcuda.sh # +cuda实现的carafe

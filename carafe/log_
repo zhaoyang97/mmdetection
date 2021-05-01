@@ -1,0 +1,41 @@
+
+
+configs/carafe/coco_carafe_3_pow.py          # 2907
+configs/carafe/coco_carafe_3_pow_norm.py     # 2908
+configs/carafe/coco_carafe_3_3_pow.py        # 2909
+configs/carafe/coco_carafe_3_3_pow_norm.py   # 2910
+
+coco
+faster rcnn
+r50 12
+r101 24
+
+cjl
+configs/carafe/coco_carafe_3_3_sa_se_norm.py # cjl 262999
+configs/carafe/coco_carafe_3_3_se_sa_norm.py # cjl 243000
+configs/carafe/coco_carafe_3_sa_se_3_norm.py # cjl 243002
+configs/carafe/coco_carafe_3_se_sa_3_norm.py # cjl 243004
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cjl
+configs/carafe/coco_carafe_3_3_sa_se_norm.py # 249146
+configs/carafe/coco_carafe_3_3_se_sa_norm.py # 249148
+configs/carafe/coco_carafe_3_sa_se_3_norm.py # 249149
+configs/carafe/coco_carafe_3_se_sa_3_norm.py # 249151
+
+configs/carafe/101_coco_carafe_3_3_sa_se_norm.py # 249153
+configs/carafe/101_coco_carafe_3_3_se_sa_norm.py # 249154
+configs/carafe/101_coco_carafe_3_sa_se_3_norm.py # 249155
+configs/carafe/101_coco_carafe_3_se_sa_3_norm.py # 249156

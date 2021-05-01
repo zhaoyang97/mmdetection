@@ -1,0 +1,41 @@
+source activate pytorch1.4
+ libtorch_cpu.so
+ade20k
+batchsize: 2卡，每卡8tu
+
+跑
+cf.sh
+33.sh
+se3.sh
+sa3.sh in /public/home/hpc194711084/container/mmsegmentation/i_carafe/ade_school/  229318
+
+=============================
+统计bs4目录下，实验结果
+
+
+==================================================
+4卡，每卡4图，80k
+workflow
+
+configs/hrnet_carafe/ade_bs4_80k_hr48.py           # cjl 231266
+configs/hrnet_carafe/ade_bs4_80k_hr48_carafe.py    # cjl 230927
+configs/hrnet_carafe/ade_bs4_80k_hr48_3_3.py       # cjl 230955
+configs/hrnet_carafe/ade_bs4_80k_hr48_3_se.py      # pcl 231246
+configs/hrnet_carafe/ade_bs4_80k_hr48_se_3.py      # pcl 231247
+configs/hrnet_carafe/ade_bs4_80k_hr48_3_sa.py      # 231286
+configs/hrnet_carafe/ade_bs4_80k_hr48_sa_3.py      # pcl 232114 | hpc 2183
+configs/hrnet_carafe/ade_bs4_80k_hr48_3_sa_se.py   # 231311
+
+configs/hrnet_carafe/ade_bs4_80k_hr48_carafe_norm.py # hpc 2188
+
+configs/hrnet_carafe/cs_bs4_hr48_carafe_norm.py      # hpc 2189
+
+==================================================
+
+
+==================================================
+workflow
+
+configs/hrnet_carafe/ade_bs8_80k_hr48_sa_3.py   # hpc194711084/container/mmsegmentation/i_carafe/ade_school/  229318
+
+==================================================

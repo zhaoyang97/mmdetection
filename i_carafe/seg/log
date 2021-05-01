@@ -1,0 +1,41 @@
+
+coco instance seg | mask rcnn | r50  | 1x
+1091 coco.sh     # baseline    #
+1093 coco_cf.sh  # +carafe     #
+1094 coco_cf2.sh # +carafe+3   #
+1080 coco_cf3.sh # +carafe+3+3 #
+
+coco instance seg | mask rcnn | r101 | 2x
+1100 101.sh     # baseline    #
+1101 101_cf.sh  # +carafe     #
+1160 101_cf2.sh # +carafe+3   #
+1179 101_cf3.sh # +carafe+3+3 #
+
+========================== result ========================
+
+coco instance seg | mask rcnn | r50  | 1x
+1091 coco.sh     # baseline    # bbox_mAP: 0.3720, bbox_mAP_50: 0.5740, bbox_mAP_75: 0.4040, bbox_mAP_s: 0.2090, bbox_mAP_m: 0.4080, bbox_mAP_l: 0.4820, bbox_mAP_copypaste: 0.372 0.574 0.404 0.209 0.408 0.482, segm_mAP: 0.3400, segm_mAP_50: 0.5440, segm_mAP_75: 0.3620, segm_mAP_s: 0.1760, segm_mAP_m: 0.3710, segm_mAP_l: 0.4600, segm_mAP_copypaste: 0.340 0.544 0.362 0.176 0.371 0.460
+1093 coco_cf.sh  # +carafe     # bbox_mAP: 0.3840, bbox_mAP_50: 0.5910, bbox_mAP_75: 0.4200, bbox_mAP_s: 0.2250, bbox_mAP_m: 0.4200, bbox_mAP_l: 0.4950, bbox_mAP_copypaste: 0.384 0.591 0.420 0.225 0.420 0.495, segm_mAP: 0.3520, segm_mAP_50: 0.5620, segm_mAP_75: 0.3750, segm_mAP_s: 0.1910, segm_mAP_m: 0.3830, segm_mAP_l: 0.4740, segm_mAP_copypaste: 0.352 0.562 0.375 0.191 0.383 0.474
+1094 coco_cf2.sh # +carafe+3   # bbox_mAP: 0.3850, bbox_mAP_50: 0.5920, bbox_mAP_75: 0.4190, bbox_mAP_s: 0.2280, bbox_mAP_m: 0.4160, bbox_mAP_l: 0.5000, bbox_mAP_copypaste: 0.385 0.592 0.419 0.228 0.416 0.500, segm_mAP: 0.3540, segm_mAP_50: 0.5640, segm_mAP_75: 0.3770, segm_mAP_s: 0.1940, segm_mAP_m: 0.3830, segm_mAP_l: 0.4750, segm_mAP_copypaste: 0.354 0.564 0.377 0.194 0.383 0.475
+1080 coco_cf3.sh # +carafe+3+3 # bbox_mAP: 0.3860, bbox_mAP_50: 0.5930, bbox_mAP_75: 0.4210, bbox_mAP_s: 0.2290, bbox_mAP_m: 0.4210, bbox_mAP_l: 0.4970, bbox_mAP_copypaste: 0.386 0.593 0.421 0.229 0.421 0.497, segm_mAP: 0.3540, segm_mAP_50: 0.5640, segm_mAP_75: 0.3790, segm_mAP_s: 0.1930, segm_mAP_m: 0.3860, segm_mAP_l: 0.4760, segm_mAP_copypaste: 0.354 0.564 0.379 0.193 0.386 0.476
+
+coco instance seg | mask rcnn | r101 | 2x
+1100 101.sh     # baseline    # bbox_mAP: 0.4060, bbox_mAP_50: 0.6060, bbox_mAP_75: 0.4450, bbox_mAP_s: 0.2290, bbox_mAP_m: 0.4460, bbox_mAP_l: 0.5320, bbox_mAP_copypaste: 0.406 0.606 0.445 0.229 0.446 0.532, segm_mAP: 0.3650, segm_mAP_50: 0.5750, segm_mAP_75: 0.3910, segm_mAP_s: 0.1910, segm_mAP_m: 0.4010, segm_mAP_l: 0.5020, segm_mAP_copypaste: 0.365 0.575 0.391 0.191 0.401 0.502
+1101 101_cf.sh  # +carafe     # bbox_mAP: 0.4140, bbox_mAP_50: 0.6200, bbox_mAP_75: 0.4530, bbox_mAP_s: 0.2420, bbox_mAP_m: 0.4540, bbox_mAP_l: 0.5390, bbox_mAP_copypaste: 0.414 0.620 0.453 0.242 0.454 0.539, segm_mAP: 0.3750, segm_mAP_50: 0.5900, segm_mAP_75: 0.4040, segm_mAP_s: 0.2030, segm_mAP_m: 0.4110, segm_mAP_l: 0.5090, segm_mAP_copypaste: 0.375 0.590 0.404 0.203 0.411 0.509
+1160 101_cf2.sh # +carafe+3   # bbox_mAP: 0.4120, bbox_mAP_50: 0.6180, bbox_mAP_75: 0.4510, bbox_mAP_s: 0.2450, bbox_mAP_m: 0.4500, bbox_mAP_l: 0.5440, bbox_mAP_copypaste: 0.412 0.618 0.451 0.245 0.450 0.544, segm_mAP: 0.3730, segm_mAP_50: 0.5900, segm_mAP_75: 0.3980, segm_mAP_s: 0.2070, segm_mAP_m: 0.4080, segm_mAP_l: 0.5110, segm_mAP_copypaste: 0.373 0.590 0.398 0.207 0.408 0.511
+1179 101_cf3.sh # +carafe+3+3 # bbox_mAP: 0.4040, bbox_mAP_50: 0.6120, bbox_mAP_75: 0.4420, bbox_mAP_s: 0.2340, bbox_mAP_m: 0.4450, bbox_mAP_l: 0.5220, bbox_mAP_copypaste: 0.404 0.612 0.442 0.234 0.445 0.522, segm_mAP: 0.3680, segm_mAP_50: 0.5820, segm_mAP_75: 0.3940, segm_mAP_s: 0.1980, segm_mAP_m: 0.4040, segm_mAP_l: 0.4960, segm_mAP_copypaste: 0.368 0.582 0.394 0.198 0.404 0.496
+
+========================== simple result ========================
+
+coco instance seg | mask rcnn | r50  | 1x
+1091 coco.sh     # baseline    # bbox_mAP: 0.3720, segm_mAP: 0.3400
+1093 coco_cf.sh  # +carafe     # bbox_mAP: 0.3840, segm_mAP: 0.3520
+1094 coco_cf2.sh # +carafe+3   # bbox_mAP: 0.3850, segm_mAP: 0.3540
+1080 coco_cf3.sh # +carafe+3+3 # bbox_mAP: 0.3860, segm_mAP: 0.3540
+
+coco instance seg | mask rcnn | r101 | 2x
+1100 101.sh     # baseline    # bbox_mAP: 0.4060, segm_mAP: 0.3650
+1101 101_cf.sh  # +carafe     # bbox_mAP: 0.4140, segm_mAP: 0.3750
+1160 101_cf2.sh # +carafe+3   # bbox_mAP: 0.4120, segm_mAP: 0.3730
+1179 101_cf3.sh # +carafe+3+3 # bbox_mAP: 0.4040, segm_mAP: 0.3680
+

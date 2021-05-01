@@ -1,0 +1,134 @@
+## end
+job 275    tct faster_rcnn lr=0.02/2
+job 276 moco lr=0.02/200
+job 283 moco lr=0.02/20
+job 295 moco lr=0.02/6
+job 297 moco lr=0.02/60
+job 347 moco lr=0.02/2
+job 348 moco lr=0.02/4
+
+## running
+
+########################################## log
+
+
+job 275    tct faster_rcnn lr=0.02/2
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.284
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.503
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.292
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.100
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.291
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.539
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.539
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.539
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.282
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.545
+2020-11-12 06:36:40,149 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_tct.py
+2020-11-12 06:36:40,149 - mmdet - INFO - Epoch(val) [12][3750]	bbox_mAP: 0.2840, bbox_mAP_50: 0.5030, bbox_mAP_75: 0.2920, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.1000, bbox_mAP_l: 0.2910, bbox_mAP_copypaste: 0.284 0.503 0.292 -1.000 0.100 0.291
+
+
+job 276 moco lr=0.02/200
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.218
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.415
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.203
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.059
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.229
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.473
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.473
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.473
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.187
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.489
+2020-11-12 06:28:28,749 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_tct_moco.py
+2020-11-12 06:28:28,750 - mmdet - INFO - Epoch(val) [12][3750]	bbox_mAP: 0.2180, bbox_mAP_50: 0.4150, bbox_mAP_75: 0.2030, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.0590, bbox_mAP_l: 0.2290, bbox_mAP_copypaste: 0.218 0.415 0.203 -1.000 0.059 0.229
+
+
+job 297 moco lr=0.02/60
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.251
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.461
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.248
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.082
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.261
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.509
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.509
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.509
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.245
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.520
+2020-11-12 19:53:26,195 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_tct_moco_lr30.py
+2020-11-12 19:53:26,196 - mmdet - INFO - Epoch(val) [12][3750]	bbox_mAP: 0.2510, bbox_mAP_50: 0.4610, bbox_mAP_75: 0.2480, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.0820, bbox_mAP_l: 0.2610, bbox_mAP_copypaste: 0.251 0.461 0.248 -1.000 0.082 0.261
+
+
+
+job 283 moco lr=0.02/20
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.270
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.485
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.271
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.093
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.277
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.524
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.524
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.524
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.264
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.531
+2020-11-12 07:17:28,026 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_tct_moco_lr10.py
+2020-11-12 07:17:28,026 - mmdet - INFO - Epoch(val) [12][3750]	bbox_mAP: 0.2700, bbox_mAP_50: 0.4850, bbox_mAP_75: 0.2710, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.0930, bbox_mAP_l: 0.2770, bbox_mAP_copypaste: 0.270 0.485 0.271 -1.000 0.093 0.277
+
+
+job 295 moco lr=0.02/6
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.271
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.485
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.274
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.109
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.277
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.525
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.525
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.525
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.289
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.531
+2020-11-12 19:53:18,702 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_tct_moco_lr3.py
+2020-11-12 19:53:18,709 - mmdet - INFO - Epoch(val) [12][3750]	bbox_mAP: 0.2710, bbox_mAP_50: 0.4850, bbox_mAP_75: 0.2740, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.1090, bbox_mAP_l: 0.2770, bbox_mAP_copypaste: 0.271 0.485 0.274 -1.000 0.109 0.277
+
+
+job 348 moco lr=0.02/4
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.272
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.485
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.277
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.104
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.279
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.529
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.529
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.529
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.295
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.534
+2020-11-14 00:53:11,709 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_tct_moco_lr2.py
+2020-11-14 00:53:11,710 - mmdet - INFO - Epoch(val) [12][3750]	bbox_mAP: 0.2720, bbox_mAP_50: 0.4850, bbox_mAP_75: 0.2770, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.1040, bbox_mAP_l: 0.2790, bbox_mAP_copypaste: 0.272 0.485 0.277 -1.000 0.104 0.279
+
+
+
+
+job 347 moco lr=0.02/2
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.267
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.479
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.270
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.103
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.274
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.530
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.530
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.530
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = -1.000
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.289
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.536
+2020-11-14 00:53:08,708 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_tct_moco_lr1.py
+2020-11-14 00:53:08,708 - mmdet - INFO - Epoch(val) [12][3750]	bbox_mAP: 0.2670, bbox_mAP_50: 0.4790, bbox_mAP_75: 0.2700, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.1030, bbox_mAP_l: 0.2740, bbox_mAP_copypaste: 0.267 0.479 0.270 -1.000 0.103 0.274

@@ -1,0 +1,24 @@
+voc
+997  0.683	0.729	0.746	0.723	0.748	0.736	0.752	0.723	0.782	0.779	0.775	0.778
+1018 0.657	0.691	0.702	0.651	0.739	0.736	0.719	0.723	0.785	0.773	0.768	0.766
+998  0.675	0.708	0.724	0.645	0.730	0.697	0.721	0.719	0.774	0.771	0.763	0.769
+999  0.640	0.718	0.709	0.659	0.716	0.736	0.710	0.712	0.782	0.774	0.767	0.766
+
+coco
+1014 bbox_mAP: 0.3670, bbox_mAP_50: 0.5680, bbox_mAP_75: 0.4020, bbox_mAP_s: 0.2100, bbox_mAP_m: 0.4000, bbox_mAP_l: 0.4720, bbox_mAP_copypaste: 0.367 0.568 0.402 0.210 0.400 0.472
+1015 bbox_mAP: 0.3760, bbox_mAP_50: 0.5840, bbox_mAP_75: 0.4080, bbox_mAP_s: 0.2220, bbox_mAP_m: 0.4110, bbox_mAP_l: 0.4830, bbox_mAP_copypaste: 0.376 0.584 0.408 0.222 0.411 0.483
+1016 bbox_mAP: 0.3790, bbox_mAP_50: 0.5870, bbox_mAP_75: 0.4110, bbox_mAP_s: 0.2230, bbox_mAP_m: 0.4120, bbox_mAP_l: 0.4880, bbox_mAP_copypaste: 0.379 0.587 0.411 0.223 0.412 0.488
+1019 bbox_mAP: 0.3760, bbox_mAP_50: 0.5860, bbox_mAP_75: 0.4080, bbox_mAP_s: 0.2240, bbox_mAP_m: 0.4100, bbox_mAP_l: 0.4840, bbox_mAP_copypaste: 0.376 0.586 0.408 0.224 0.410 0.484
+
+
+faster rcnn | voc | 7h
+997  baseline.sh #                      # 0.778
+998  cf.sh       # +carafe              # 0.766
+999  cf2.sh      # +carafe + 3*3        # 0.769
+1018 cfcuda.sh   # +cuda实现的carafe     # 0.766
+
+faster rcnn | coco
+1014 coco.sh        #                   # 0.3670
+1015 coco_cf.sh     # +carafe           # 0.3760
+1016 coco_cf2.sh    # +carafe + 3*3     # 0.3790
+1019 coco_cfcuda.sh # +cuda实现的carafe  # 0.3760
