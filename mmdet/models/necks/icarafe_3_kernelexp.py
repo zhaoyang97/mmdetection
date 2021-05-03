@@ -2,13 +2,13 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from mmseg.models.carafe.i_attention_layer import SqueezeExcitation_c64
-from mmseg.models.carafe.i_attention_layer import SqueezeExcitation_c100
-from mmseg.models.carafe.i_attention_layer import SE
-from mmseg.models.carafe.i_attention_layer import SpatialAttention
-from mmseg.models.carafe.i_attention_layer import ConvBNReLU
-from mmseg.models.carafe.i_attention_layer import PowerIndex
-from mmseg.models.carafe.i_attention_layer import Power
+from .i_attention_layer import SqueezeExcitation_c64
+from .i_attention_layer import SqueezeExcitation_c100
+from .i_attention_layer import SpatialAttention
+from .i_attention_layer import ConvBNReLU
+from .i_attention_layer import SE
+from .i_attention_layer import PowerIndex
+from .i_attention_layer import Power
 
 
 # modified by zy 20210313

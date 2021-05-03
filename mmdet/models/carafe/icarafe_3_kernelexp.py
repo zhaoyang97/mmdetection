@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-
+from mmcv.cnn import normal_init, xavier_init
 
 from .i_attention_layer import SqueezeExcitation_c64
 from .i_attention_layer import SqueezeExcitation_c100
@@ -11,8 +11,9 @@ from .i_attention_layer import SE
 from .i_attention_layer import PowerIndex
 from .i_attention_layer import Power
 
+
 # modified by zy 20210313
-class CARAFE_3_3_kernelexp(nn.Module):
+class CARAFE_3_kernelexp(nn.Module):
     def __init__(self, channels, compressed_channels=64, scale_factor=2, up_kernel=5, encoder_kernel=3):
         """ The unofficial implementation of the CARAFE module.
         The details are in "https://arxiv.org/abs/1905.02188".
@@ -25,7 +26,7 @@ class CARAFE_3_3_kernelexp(nn.Module):
         Returns:
             X: The upsampled feature map.
         """
-        super(CARAFE_3_3_kernelexp, self).__init__()
+        super(CARAFE_3_kernelexp, self).__init__()
         self.scale = scale_factor
 
         self.comp = ConvBNReLU(channels, compressed_channels, kernel_size=1, stride=1,
@@ -33,9 +34,9 @@ class CARAFE_3_3_kernelexp(nn.Module):
         self.enc = ConvBNReLU(compressed_channels, (scale_factor * up_kernel) ** 2, kernel_size=encoder_kernel,
                               stride=1, padding=encoder_kernel // 2, dilation=1,
                               use_relu=False)
-        self.enc2 = ConvBNReLU((scale_factor * up_kernel) ** 2, (scale_factor * up_kernel) ** 2, kernel_size=encoder_kernel,
-                              stride=1, padding=encoder_kernel // 2, dilation=1,
-                              use_relu=False)
+        # self.enc2 = ConvBNReLU((scale_factor * up_kernel) ** 2, (scale_factor * up_kernel) ** 2, kernel_size=encoder_kernel,
+        #                       stride=1, padding=encoder_kernel // 2, dilation=1,
+        #                       use_relu=False)
         self.enc3 = ConvBNReLU(compressed_channels, compressed_channels, kernel_size=encoder_kernel,
                               stride=1, padding=encoder_kernel // 2, dilation=1,
                               use_relu=False)
@@ -45,8 +46,17 @@ class CARAFE_3_3_kernelexp(nn.Module):
         self.upsmp = nn.Upsample(scale_factor=scale_factor, mode='nearest')
         self.unfold = nn.Unfold(kernel_size=up_kernel, dilation=scale_factor,
                                 padding=up_kernel // 2 * scale_factor)
-        self.PI = PowerIndex(c_in=compressed_channels//(scale_factor**2))
+        # self.PI = PowerIndex(c_in=compressed_channels//(scale_factor**2))
+        self.PI = Power()
         # self.se = SE((scale_factor * up_kernel) ** 2, 16)
+
+
+    def init_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                xavier_init(m, distribution='uniform')
+        # normal_init(self.content_encoder, std=0.001)
+
 
     def forward(self, X):
         b, c, h, w = X.size()
@@ -59,7 +69,7 @@ class CARAFE_3_3_kernelexp(nn.Module):
         # P = torch.clamp(P, 0.00001)
 
         W = self.enc(W)  # modify by zy 20210111 增加一个3*3的卷积
-        W = self.enc2(W)  # b * 100 * h * w
+        # W = self.enc2(W)  # b * 100 * h * w
         # W *= self.se(W)
         W = self.pix_shf(W)  # b * 25 * h_ * w_
 
@@ -73,8 +83,8 @@ class CARAFE_3_3_kernelexp(nn.Module):
         # i = self.PI(W)
         # i = torch.clamp(i, 0.00001)
         # W = torch.clamp(W, 0.00001)
-        W = W * torch.exp(P)
         # W = torch.pow(W, P)
+        W = W * torch.exp(P)
         # W = F.normalize(W, p=1, dim=1)
         W = F.softmax(W, dim=1)
 
@@ -92,6 +102,6 @@ class CARAFE_3_3_kernelexp(nn.Module):
 
 if __name__ == '__main__':
     x = torch.Tensor(1, 16, 24, 24)
-    carafe = CARAFE_3_3_kernelexp(16)
+    carafe = CARAFE_3_kernelexp(16)
     oup = carafe(x)
     print(oup.size())

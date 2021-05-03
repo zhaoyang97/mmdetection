@@ -6,7 +6,11 @@ from .htc_mask_head import HTCMaskHead
 from .mask_point_head import MaskPointHead
 from .maskiou_head import MaskIoUHead
 
+from .fcn_mask_head_3_kernelexp import FCNMaskHead_3_kernelexp
+
 __all__ = [
+    'FCNMaskHead_3_kernelexp',
+    
     'FCNMaskHead', 'HTCMaskHead', 'FusedSemanticHead', 'GridHead',
     'MaskIoUHead', 'CoarseMaskHead', 'MaskPointHead'
 ]

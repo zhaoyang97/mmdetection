@@ -38,17 +38,22 @@ from .fpn_carafe_3_pow_norm import FPN_CARAFE_3_pow_norm
 from .fpn_carafe_3_3_pow import FPN_CARAFE_3_3_pow
 from .fpn_carafe_3_3_pow_norm import FPN_CARAFE_3_3_pow_norm
 
+from .fpn_carafe_3_kernelexp import FPN_CARAFE_3_kernelexp
+from .fpn_carafe_3_3_kernelexp import FPN_CARAFE_3_3_kernelexp
 
 __all__ = [
-    'FPN', 'BFP', 'HRFPN', 'NASFPN', 'PAFPN', 'NASFCOS_FPN',
-    'RFP', 'YOLOV3Neck'
-    # modify by zy 20210111
-    , 'FPN_CARAFE'      # python 实现的CARAFE
-    , 'FPN_CARAFE_2'    # python 实现的CARAFE + 3*3
-    , 'FPN_CARAFE_cuda' # cuda 实现的CARAFE
+    'FPN_CARAFE_3_kernelexp',
+    'FPN_CARAFE_3_3_kernelexp',
 
-    , 'FPN_CARAFE_se'  # python 实现的CARAFE, content encoder增加了senet的结构，增加全局信息
-    , 'FPN_CARAFE_se2', # python 实现的CARAFE + 3*3, content encoder增加了senet的结构，增加全局信息
+    'FPN', 'BFP', 'HRFPN', 'NASFPN', 'PAFPN', 'NASFCOS_FPN',
+    'RFP', 'YOLOV3Neck',
+    # modify by zy 20210111
+    'FPN_CARAFE',       # python 实现的CARAFE
+    'FPN_CARAFE_2',     # python 实现的CARAFE + 3*3
+    'FPN_CARAFE_cuda',  # cuda 实现的CARAFE
+
+    'FPN_CARAFE_se',   # python 实现的CARAFE, content encoder增加了senet的结构，增加全局信息
+    'FPN_CARAFE_se2',  # python 实现的CARAFE + 3*3, content encoder增加了senet的结构，增加全局信息
 
     'FPN_CARAFE_sa_3',
     'FPN_CARAFE_se_3',

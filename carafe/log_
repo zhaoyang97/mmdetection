@@ -1,3 +1,62 @@
+cd userfolder/mmdetection
+source activate mmdetection
+nvidia-smi
+
+========================
+carafe   = FPN + 4*carafe
+carafed  = backbone + 7*carafe {1个在res1代替maxpool，3个bottleneck每个分支有2个}
+carafeh  = maskrcnn_head {1个上采样 从14*14->28*28}
+carafepp = carafe + carafed
+
+========================
+faster | carafe   | 1x         12h
+faster | carafe   | 2x         26h
+faster | carafed  | 1x         15h
+faster | carafepp | 2x |       1d15h
+faster | carafepp | 2x | exp
+
+faster | carafeh  | 1x         20h
+========================
+
+
+
+
+# Table 4 | 2image * 8gpus |
+configs/faster_carafe/carafed_coco_faster_r50_1x.py                      # rtx02 for test
+configs/faster_carafe/carafed_coco_faster_r50_1x_3_kernelexp.py          # rtx03 for test
+# Table 1
+configs/faster_carafe/carafepp_coco_faster_r101_2x.py
+configs/faster_carafe/carafepp_coco_faster_r101_2x_3_kermelexp.py
+
+# Table 6
+configs/mask_carafe/carafeh_coco_mask_r50_1x.py                           # 3797  | rtx01 | 可能配置错了，跑的是 3_kernelexp
+# Table 6 | Table 7.MH
+configs/mask_carafe/carafeh_coco_mask_r50_1x_3_kernelexp.py               # rtx00
+# Table 7 | 前两个优先级最高
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN.py                    # 3798
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH.py                 # 3799
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__BK.py
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH_BK.py
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN.py        # rtx04
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH.py     # rtx03
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH_BK.py
+
+
+
+
+
+
+
+
+================================= DONE =================================
+
+# 2image * 8gpus |
+configs/faster_carafe/coco_faster_r50_1x_carafe.py             # rtx02
+configs/faster_carafe/coco_faster_r50_2x_carafe.py             # rtx04
+configs/faster_carafe/coco_faster_r50_1x_carafe_3_kernelexp.py # rtx00
+configs/faster_carafe/coco_faster_r50_2x_carafe_3_kernelexp.py # rtx01
+
 
 
 configs/carafe/coco_carafe_3_pow.py          # 2907
