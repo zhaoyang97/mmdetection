@@ -1,12 +1,18 @@
 from .bfp import BFP
+from .channel_mapper import ChannelMapper
+from .dilated_encoder import DilatedEncoder
+from .fpg import FPG
 from .fpn import FPN
+from .fpn_carafe import FPN_CARAFE
 from .hrfpn import HRFPN
 from .nas_fpn import NASFPN
 from .nasfcos_fpn import NASFCOS_FPN
 from .pafpn import PAFPN
 from .rfp import RFP
 from .yolo_neck import YOLOV3Neck
-# modified by zy 20210115
+
+
+
 from .fpn_carafe import FPN_CARAFE
 from .fpn_carafe_2 import FPN_CARAFE_2
 from .fpn_carafe_3 import FPN_CARAFE_3
@@ -43,14 +49,13 @@ from .fpn_carafe_3_3_kernelexp import FPN_CARAFE_3_3_kernelexp
 
 from .fpn_carafe_3_exp import FPN_CARAFE_3_exp
 
+
+
 __all__ = [
     'FPN_CARAFE_3_exp',
     'FPN_CARAFE_3_kernelexp',
     'FPN_CARAFE_3_3_kernelexp',
 
-    'FPN', 'BFP', 'HRFPN', 'NASFPN', 'PAFPN', 'NASFCOS_FPN',
-    'RFP', 'YOLOV3Neck',
-    # modify by zy 20210111
     'FPN_CARAFE',       # python 实现的CARAFE
     'FPN_CARAFE_2',     # python 实现的CARAFE + 3*3
     'FPN_CARAFE_cuda',  # cuda 实现的CARAFE
@@ -75,4 +80,7 @@ __all__ = [
     'FPN_CARAFE_3_pow_norm',
     'FPN_CARAFE_3_3_pow',
     'FPN_CARAFE_3_3_pow_norm',
+
+    'FPN', 'BFP', 'ChannelMapper', 'HRFPN', 'NASFPN', 'FPN_CARAFE', 'PAFPN',
+    'NASFCOS_FPN', 'RFP', 'YOLOV3Neck', 'FPG', 'DilatedEncoder'
 ]
