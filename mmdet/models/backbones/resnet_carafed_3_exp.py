@@ -9,9 +9,8 @@ from mmdet.utils import get_root_logger
 from ..builder import BACKBONES
 
 
-from ..utils import ResLayer_carafed as ResLayer
-from ..carafe.carafe_downsample import CARAFE_Downsample
-
+from ..utils import ResLayer_carafed_3_exp as ResLayer
+from ..carafe.carafe_downsample_3_exp import CARAFE_Downsample_3_exp as CARAFE_Downsample
 
 
 class BasicBlock(nn.Module):
@@ -321,7 +320,7 @@ class Bottleneck(nn.Module):
 
 
 @BACKBONES.register_module()
-class ResNet_carafed(nn.Module):
+class ResNet_carafed_3_exp(nn.Module):
     """ResNet backbone.
 
     Args:
@@ -402,7 +401,7 @@ class ResNet_carafed(nn.Module):
                  plugins=None,
                  with_cp=False,
                  zero_init_residual=True):
-        super(ResNet_carafed, self).__init__()
+        super(ResNet_carafed_3_exp, self).__init__()
         if depth not in self.arch_settings:
             raise KeyError(f'invalid depth {depth} for resnet')
         self.depth = depth
@@ -662,7 +661,7 @@ class ResNet_carafed(nn.Module):
     def train(self, mode=True):
         """Convert the model into training mode while keep normalization layer
         freezed."""
-        super(ResNet_carafed, self).train(mode)
+        super(ResNet_carafed_3_exp, self).train(mode)
         self._freeze_stages()
         if mode and self.norm_eval:
             for m in self.modules():

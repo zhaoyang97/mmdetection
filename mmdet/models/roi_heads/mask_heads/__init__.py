@@ -7,6 +7,7 @@ from .mask_point_head import MaskPointHead
 from .maskiou_head import MaskIoUHead
 
 from .fcn_mask_head_3_kernelexp import FCNMaskHead_3_kernelexp
+from .fcn_mask_head_3_exp import FCNMaskHead_3_exp
 
 __all__ = [
     'FCNMaskHead_3_kernelexp',

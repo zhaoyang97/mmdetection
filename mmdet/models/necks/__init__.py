@@ -41,7 +41,10 @@ from .fpn_carafe_3_3_pow_norm import FPN_CARAFE_3_3_pow_norm
 from .fpn_carafe_3_kernelexp import FPN_CARAFE_3_kernelexp
 from .fpn_carafe_3_3_kernelexp import FPN_CARAFE_3_3_kernelexp
 
+from .fpn_carafe_3_exp import FPN_CARAFE_3_exp
+
 __all__ = [
+    'FPN_CARAFE_3_exp',
     'FPN_CARAFE_3_kernelexp',
     'FPN_CARAFE_3_3_kernelexp',
 

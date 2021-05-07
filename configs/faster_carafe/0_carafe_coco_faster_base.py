@@ -7,14 +7,16 @@ _base_ = [
 
 model = dict(
     # pretrained='work_dirs/ipth/pretrained.pth',
-    pretrained='work_dirs/imagenet_resnet50_carafed/imagenet_resnet50_carafed_pretrained.pth',
+    pretrained='work_dirs/carafed_coco_faster_r50_1x_3_kernelexp/pretrained.pth',
     backbone=dict(
         # type='ResNet',
         type='ResNet_carafed',
+        # type='ResNet_carafed_3_exp',
         # type='ResNet_carafed_3_kernelexp',
         depth=50),
     # neck=dict(
     #     type='FPN_CARAFE',
+    #     # type='FPN_CARAFE_3_exp',
     #     # type='FPN_CARAFE_3_kernelexp',
     #     upsample_cfg=dict(
     #         type='carafe',
@@ -24,4 +26,3 @@ model = dict(
     #         encoder_dilation=1,
     #         compressed_channels=64))
 )
-

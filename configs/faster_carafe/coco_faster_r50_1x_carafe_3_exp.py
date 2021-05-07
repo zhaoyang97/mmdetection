@@ -1,7 +1,7 @@
 _base_ = [
     '../_base_/models/faster_rcnn_r50_fpn_coco.py',
     '../_base_/datasets/cocodataset_detection.py',
-    '../_base_/schedules/schedule_2x.py',
+    '../_base_/schedules/schedule_1x.py',
     '../_base_/default_runtime.py'
 ]
 
@@ -12,7 +12,8 @@ model = dict(
     neck=dict(
         # type='FPN_CARAFE_3_pow',
         # type='FPN_CARAFE_3_pow_norm',
-        type='FPN_CARAFE',
+        # type='FPN_CARAFE_3_kernelexp',
+        type='FPN_CARAFE_3_exp',
         # type='FPN_CARAFE_3_3_pow_norm',
         in_channels=[256, 512, 1024, 2048],
         out_channels=256,

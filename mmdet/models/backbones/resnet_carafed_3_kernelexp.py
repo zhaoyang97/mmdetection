@@ -9,10 +9,8 @@ from mmdet.utils import get_root_logger
 from ..builder import BACKBONES
 
 
-
 from ..utils import ResLayer_carafed_3_kernelexp as ResLayer
 from ..carafe.carafe_downsample_3_kernelexp import CARAFE_Downsample_3_kernelexp as CARAFE_Downsample
-
 
 
 class BasicBlock(nn.Module):

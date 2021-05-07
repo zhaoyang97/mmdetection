@@ -19,31 +19,61 @@ faster | carafeh  | 1x         20h
 ========================
 
 
+# faster fpn
+configs/faster_carafe/coco_faster_r50_1x_carafe_3_exp.py                # lsq 3893
+# mask fpn & maskhead
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__MH.py             # lsq 3894
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__FPN.py            # lsq 3895
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__FPN_MH.py         # lsq 3896
 
 
-# Table 4 | 2image * 8gpus |
-configs/faster_carafe/carafed_coco_faster_r50_1x.py                      # rtx02 for test
-configs/faster_carafe/carafed_coco_faster_r50_1x_3_kernelexp.py          # rtx03 for test
-# Table 1
-configs/faster_carafe/carafepp_coco_faster_r101_2x.py
-configs/faster_carafe/carafepp_coco_faster_r101_2x_3_kermelexp.py
 
-# Table 6
-configs/mask_carafe/carafeh_coco_mask_r50_1x.py                           # 3797  | rtx01 | 可能配置错了，跑的是 3_kernelexp
+# Table 3 | 2image * 8gpus |
+configs/faster_carafe/carafed_coco_faster_r50_1x.py                      # rtx01 1
+configs/faster_carafe/carafed_coco_faster_r50_1x_3_kernelexp.py          # rtx02 1
+# Table 3 | 2image * 8gpus | Pretrained=carafed_coco_faster_r50_1x_3_kernelexp/pth12
+configs/faster_carafe/carafed_coco_faster_r50_1x.py                      # rtx03 1
+configs/faster_carafe/carafed_coco_faster_r50_1x_3_kernelexp.py          # rtx02 1
+# Table 5 | 2image * 8gpus | Pretrained=carafed_coco_faster_r50_1x_3_kernelexp/pth12
+configs/faster_carafe/carafepp_coco_faster_r50_1x.py                     # TODO
+configs/faster_carafe/carafepp_coco_faster_r50_1x_3_kernelexp.py         # TODO
+# Table 5 | 2image * 8gpus | 24 epoch
+configs/faster_carafe/carafed_coco_faster_r50_2x.py                      # rtx03
+configs/faster_carafe/carafed_coco_faster_r50_2x_3_kernelexp.py          # rtx02
+
+# Table 1 | 第二个配置 2080 OOM ！！！
+configs/faster_carafe/carafepp_coco_faster_r101_2x.py                    # pcl 289194
+configs/faster_carafe/caraf
+epp_coco_faster_r101_2x_3_kermelexp.py        # pcl 289194
+# V100
+configs/faster_carafe/bs4_carafepp_coco_faster_r101_2x.py                    #
+configs/faster_carafe/bs4_carafepp_coco_faster_r101_2x_3_kermelexp.py        #
+
+
 # Table 6 | Table 7.MH
-configs/mask_carafe/carafeh_coco_mask_r50_1x_3_kernelexp.py               # rtx00
+configs/mask_carafe/carafeh_coco_mask_r50_1x.py                           # 3797 1
+# Table 6 | Table 7.MH
+configs/mask_carafe/carafeh_coco_mask_r50_1x_3_kernelexp.py               # rtx00 | rtx01(无3_kernel的config) 1
 # Table 7 | 前两个优先级最高
-configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN.py                    # 3798
-configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH.py                 # 3799
-configs/mask_carafe/carafeppp_coco_mask_r50_1x__BK.py
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN.py                    # 3798 1
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH.py                 # 3799 1
 configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH_BK.py
-configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN.py        # rtx04
-configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH.py     # rtx03
-configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN.py        # rtx04 1
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH.py     # rtx03 1
 configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH_BK.py
 
 
+configs/mask_carafe/carafeppp_coco_mask_r50_2x__FPN_MH_BK.py
+configs/mask_carafe/carafeppp_coco_mask_r50_2x_3_kernelexp__FPN_MH_BK.py
+configs/mask_carafe/carafeppp_coco_mask_r50_2x__BK.py                     #
+configs/mask_carafe/carafeppp_coco_mask_r50_2x_3_kernelexp__BK.py         #
 
+# Pretrained=carafed_coco_faster_r50_1x_3_kernelexp/pth12
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__BK.py                     # TODO
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py         # TODO continue on rtx00 epoch_2
+
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__BK.py                     # RTX03 kill on epoch 5
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py         # RTX00 kill on epoch 5
 
 
 
@@ -51,7 +81,7 @@ configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH_BK.py
 
 ================================= DONE =================================
 
-# 2image * 8gpus |
+# Table 4 | 2image * 8gpus |
 configs/faster_carafe/coco_faster_r50_1x_carafe.py             # rtx02
 configs/faster_carafe/coco_faster_r50_2x_carafe.py             # rtx04
 configs/faster_carafe/coco_faster_r50_1x_carafe_3_kernelexp.py # rtx00

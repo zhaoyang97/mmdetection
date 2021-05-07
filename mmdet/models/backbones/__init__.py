@@ -11,13 +11,14 @@ from .ssd_vgg import SSDVGG
 
 
 from .resnet_carafed import ResNet_carafed
+from .resnet_carafed_3_exp import ResNet_carafed_3_exp
 from .resnet_carafed_3_kernelexp import ResNet_carafed_3_kernelexp
 
 
 __all__ = [
     'ResNet_carafed',
+    'ResNet_carafed_3_exp',
     'ResNet_carafed_3_kernelexp',
-
 
     'RegNet', 'ResNet', 'ResNetV1d', 'ResNeXt', 'SSDVGG', 'HRNet', 'Res2Net',
     'HourglassNet', 'DetectoRS_ResNet', 'DetectoRS_ResNeXt', 'Darknet'
