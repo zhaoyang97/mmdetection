@@ -6,6 +6,8 @@ _base_ = [
 ]
 
 model = dict(
+    # pretrained='work_dirs/ipth/pretrained.pth',
+    pretrained='work_dirs/carafed_coco_faster_r50_1x_3_kernelexp/pretrained.pth',
     backbone=dict(
         # type='ResNet',
         type='ResNet_carafed',

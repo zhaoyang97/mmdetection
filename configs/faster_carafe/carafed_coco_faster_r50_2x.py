@@ -1,7 +1,7 @@
 _base_ = [
     '../_base_/models/faster_rcnn_r50_fpn_coco.py',
     '../_base_/datasets/cocodataset_detection.py',
-    '../_base_/schedules/schedule_1x.py',
+    '../_base_/schedules/schedule_2x.py',
     '../_base_/default_runtime.py'
 ]
 
@@ -9,12 +9,11 @@ model = dict(
     backbone=dict(
         # type='ResNet',
         type='ResNet_carafed',
+        # type='ResNet_carafed_3_kernelexp',
         depth=50),
     # neck=dict(
-    #     # type='FPN_CARAFE_3_pow',
-    #     # type='FPN_CARAFE_3_pow_norm',
     #     type='FPN_CARAFE',
-    #     # type='FPN_CARAFE_3_3_pow_norm',
+    #     # type='FPN_CARAFE_3_kernelexp',
     #     upsample_cfg=dict(
     #         type='carafe',
     #         up_kernel=5,

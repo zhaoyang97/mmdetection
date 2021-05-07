@@ -1,12 +1,11 @@
 _base_ = [
     '../_base_/models/faster_rcnn_r50_fpn_coco.py',
     '../_base_/datasets/cocodataset_detection.py',
-    '../_base_/schedules/schedule_1x.py',
+    '../_base_/schedules/schedule_2x.py',
     '../_base_/default_runtime.py'
 ]
 
 model = dict(
-    pretrained='work_dirs/ipth/pretrained.pth',
     backbone=dict(
         # type='ResNet',
         # type='ResNet_carafed',

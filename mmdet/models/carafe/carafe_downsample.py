@@ -1,5 +1,5 @@
 import torch.nn.functional as F
-from mmcv.cnn import normal_init, xavier_init
+from mmcv.cnn import normal_init, xavier_init, kaiming_init
 from torch import nn
 
 
@@ -45,15 +45,6 @@ class CARAFE_Downsample(nn.Module):
             dilation=self.encoder_dilation,
             stride=self.scale_factor,
             groups=1)
-        # add by zy 20210311, 再加一个3*3的卷积做特征对齐
-        # self.content_encoder2 = nn.Conv2d(
-        #     self.kernel_size * self.kernel_size * self.group,
-        #     self.kernel_size * self.kernel_size * self.group,
-        #     self.encoder_kernel,
-        #     padding=int((self.encoder_kernel - 1) * self.encoder_dilation / 2),
-        #     dilation=self.encoder_dilation,
-        #     stride=self.scale_factor,
-        #     groups=1)
         self.unfold = nn.Unfold(kernel_size=self.kernel_size, stride=scale_factor,
                                 # padding=int((self.encoder_kernel - 1) * self.encoder_dilation / 2)
                                 padding=self.kernel_size // 2
@@ -64,7 +55,10 @@ class CARAFE_Downsample(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution='uniform')
-        normal_init(self.content_encoder, std=0.001)
+        # normal_init(self.content_encoder, std=0.001)
+        kaiming_init(self.channel_compressor)
+        kaiming_init(self.content_encoder)
+
 
     def kernel_normalizer(self, mask):
         # mask = F.pixel_shuffle(mask, self.scale_factor) # no needed for down_sample

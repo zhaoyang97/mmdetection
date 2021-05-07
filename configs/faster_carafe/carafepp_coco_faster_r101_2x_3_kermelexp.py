@@ -6,7 +6,7 @@ _base_ = [
 ]
 
 model = dict(
-    pretrained='open-mmlab://detectron2/resnet101_caffe',
+    pretrained='torchvision://resnet101',
     backbone=dict(
         # type='ResNet',
         # type='ResNet_carafed',

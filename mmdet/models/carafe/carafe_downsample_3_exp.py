@@ -1,5 +1,5 @@
 import torch.nn.functional as F
-from mmcv.cnn import normal_init, xavier_init, kaiming_init
+from mmcv.cnn import normal_init, xavier_init
 from torch import nn
 import torch
 
@@ -13,8 +13,7 @@ from .i_attention_layer import PowerIndex
 from .i_attention_layer import Power
 
 
-
-class CARAFE_Downsample_3_kernelexp(nn.Module):
+class CARAFE_Downsample_3_exp(nn.Module):
     """
     Ref:
         https://arxiv.org/abs/1905.02188 for more details.
@@ -39,7 +38,7 @@ class CARAFE_Downsample_3_kernelexp(nn.Module):
                  encoder_kernel=3,
                  encoder_dilation=1,
                  compressed_channels=64):
-        super(CARAFE_Downsample_3_kernelexp, self).__init__()
+        super(CARAFE_Downsample_3_exp, self).__init__()
         self.channels = channels
         self.scale_factor = scale_factor
         self.kernel_size = kernel_size
@@ -55,17 +54,7 @@ class CARAFE_Downsample_3_kernelexp(nn.Module):
             self.encoder_kernel,
             padding=int((self.encoder_kernel - 1) * self.encoder_dilation / 2),
             dilation=self.encoder_dilation,
-            stride=self.scale_factor,
-            groups=1)
-
-        self.kernel_encoder = nn.Conv2d(
-            self.compressed_channels,
-            16,
-            # self.compressed_channels // (self.scale_factor**2), #
-            self.encoder_kernel,
-            padding=int((self.encoder_kernel - 1) * self.encoder_dilation / 2),
-            dilation=self.encoder_dilation,
-            stride=self.scale_factor, 
+            stride=self.scale_factor,  # TODO: can pooling or other conv work better?
             groups=1)
 
         self.unfold = nn.Unfold(kernel_size=self.kernel_size, stride=scale_factor,
@@ -80,19 +69,14 @@ class CARAFE_Downsample_3_kernelexp(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution='uniform')
-        # normal_init(self.content_encoder, std=0.001)
-        kaiming_init(self.channel_compressor)
-        kaiming_init(self.content_encoder)
-        kaiming_init(self.kernel_encoder)
+        normal_init(self.content_encoder, std=0.001)
 
-    def kernel_normalizer(self, mask, compressed_x):
+    def kernel_normalizer(self, mask):
         # mask = F.pixel_shuffle(mask, self.scale_factor) # no needed for down_sample
 
-        compressed_x = self.kernel_encoder(compressed_x)
-        i = self.PI(compressed_x)
-        i = torch.clamp(i, max=5)
-        # i = torch.clamp(i, 1.00001)
-        # mask = torch.clamp(mask, 1.00001)
+        i = self.PI(mask)
+        # i = torch.clamp(i, 0.00001)
+        # mask = torch.clamp(mask, 0.00001)
         mask = mask * torch.exp(i)
 
         n, mask_c, h, w = mask.size()
@@ -119,13 +103,15 @@ class CARAFE_Downsample_3_kernelexp(nn.Module):
     def forward(self, x):
         compressed_x = self.channel_compressor(x)
         mask = self.content_encoder(compressed_x)
-        mask = self.kernel_normalizer(mask, compressed_x)
+        # add by zy 20210311, 再加一个3*3的卷积做特征对齐
+        # mask = self.content_encoder2(mask)
+        mask = self.kernel_normalizer(mask)
         x = self.feature_reassemble(x, mask)
         return x
 
 
 if __name__ == '__main__':
     x = torch.Tensor(1, 16, 24, 24)
-    carafe = CARAFE_Downsample_3_kernelexp(16, 2)
+    carafe = CARAFE_Downsample_3_exp(16, 2)
     oup = carafe(x)
     print(oup.size())

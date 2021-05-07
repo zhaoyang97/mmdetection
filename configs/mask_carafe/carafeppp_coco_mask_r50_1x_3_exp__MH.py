@@ -8,20 +8,15 @@ _base_ = [
 # model settings
 model = dict(
     type='MaskRCNN',
-    pretrained='work_dirs/ipth/pretrained.pth',
+    pretrained='torchvision://resnet50',
     backbone=dict(
-        # type='ResNet',                              # backbone
-        # type='ResNet_carafed',
-        type='ResNet_carafed_3_kernelexp',
+        type='ResNet',           # backbone
         depth=50),
     neck=dict(
-        # type='FPN',                                   # FPN
-        # type='FPN_CARAFE',
-        type='FPN_CARAFE_3_kernelexp',
-    ),
+        type='FPN'),             # FPN
     roi_head=dict(
         mask_head=dict(
-            # type='FCNMaskHead',
-            type='FCNMaskHead_3_kernelexp',           # maskhead
+            # type='FCNMaskHead', 
+            type='FCNMaskHead_3_exp',  # maskhead
             upsample_cfg=dict(type='carafe', scale_factor=2), # deconv, carafe
             num_classes=80)))
