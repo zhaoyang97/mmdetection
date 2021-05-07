@@ -6,11 +6,11 @@ _base_ = [
 ]
 
 model = dict(
-    # pretrained='work_dirs/ipth/pretrained.pth',
-    pretrained='work_dirs/imagenet_resnet50_carafed/imagenet_resnet50_carafed_pretrained.pth',
+    pretrained='work_dirs/ipth/imagenet_resnet50_carafed_pretrained.pth',
     backbone=dict(
         # type='ResNet',
         type='ResNet_carafed',
+        # type='ResNet_carafed_3_exp',
         # type='ResNet_carafed_3_kernelexp',
         depth=50),
     # neck=dict(

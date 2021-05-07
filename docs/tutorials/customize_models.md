@@ -21,7 +21,7 @@ Create a new file `mmdet/models/backbones/mobilenet.py`.
 ```python
 import torch.nn as nn
 
-from ..registry import BACKBONES
+from ..builder import BACKBONES
 
 
 @BACKBONES.register_module()
@@ -31,9 +31,6 @@ class MobileNet(nn.Module):
         pass
 
     def forward(self, x):  # should return a tuple
-        pass
-
-    def init_weights(self, pretrained=None):
         pass
 ```
 
@@ -74,9 +71,9 @@ model = dict(
 Create a new file `mmdet/models/necks/pafpn.py`.
 
 ```python
-from ..registry import NECKS
+from ..builder import NECKS
 
-@NECKS.register
+@NECKS.register_module()
 class PAFPN(nn.Module):
 
     def __init__(self,
@@ -105,7 +102,7 @@ or alternatively add
 
 ```python
 custom_imports = dict(
-    imports=['mmdet.models.necks.mobilenet'],
+    imports=['mmdet.models.necks.pafpn.py'],
     allow_failed_imports=False)
 ```
 
@@ -125,11 +122,14 @@ neck=dict(
 
 Here we show how to develop a new head with the example of [Double Head R-CNN](https://arxiv.org/abs/1904.06493) as the following.
 
-First, add a new bbox head in `mmdet/models/bbox_heads/double_bbox_head.py`.
+First, add a new bbox head in `mmdet/models/roi_heads/bbox_heads/double_bbox_head.py`.
 Double Head R-CNN implements a new bbox head for object detection.
 To implement a bbox head, basically we need to implement three functions of the new module as the following.
 
 ```python
+from mmdet.models.builder import HEADS
+from .bbox_head import BBoxHead
+
 @HEADS.register_module()
 class DoubleConvFCBBoxHead(BBoxHead):
     r"""Bbox head used in Double-Head R-CNN
@@ -154,8 +154,6 @@ class DoubleConvFCBBoxHead(BBoxHead):
         kwargs.setdefault('with_avg_pool', True)
         super(DoubleConvFCBBoxHead, self).__init__(**kwargs)
 
-    def init_weights(self):
-        # conv layers are already initialized by ConvModule
 
     def forward(self, x_cls, x_reg):
 
@@ -183,7 +181,6 @@ class StandardRoIHead(BaseRoIHead, BBoxTestMixin, MaskTestMixin):
 
     def init_mask_head(self, mask_roi_extractor, mask_head):
 
-    def init_weights(self, pretrained):
 
     def forward_dummy(self, x, proposals):
 

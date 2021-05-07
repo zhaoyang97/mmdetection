@@ -34,23 +34,6 @@ class StandardRoIHead(BaseRoIHead, BBoxTestMixin, MaskTestMixin):
             self.mask_roi_extractor = self.bbox_roi_extractor
         self.mask_head = build_head(mask_head)
 
-    def init_weights(self, pretrained):
-        """Initialize the weights in head.
-
-        Args:
-            pretrained (str, optional): Path to pre-trained weights.
-                Defaults to None.
-        """
-        if self.with_shared_head:
-            self.shared_head.init_weights(pretrained=pretrained)
-        if self.with_bbox:
-            self.bbox_roi_extractor.init_weights()
-            self.bbox_head.init_weights()
-        if self.with_mask:
-            self.mask_head.init_weights()
-            if not self.share_roi_extractor:
-                self.mask_roi_extractor.init_weights()
-
     def forward_dummy(self, x, proposals):
         """Dummy forward function."""
         # bbox head
@@ -158,7 +141,6 @@ class StandardRoIHead(BaseRoIHead, BBoxTestMixin, MaskTestMixin):
         bbox_results.update(loss_bbox=loss_bbox)
         return bbox_results
 
-
     def _mask_forward_train(self, x, sampling_results, bbox_feats, gt_masks,
                             img_metas):
         """Run forward function and calculate loss for mask head in
@@ -247,6 +229,13 @@ class StandardRoIHead(BaseRoIHead, BBoxTestMixin, MaskTestMixin):
 
         det_bboxes, det_labels = self.simple_test_bboxes(
             x, img_metas, proposal_list, self.test_cfg, rescale=rescale)
+        if torch.onnx.is_in_onnx_export():
+            if self.with_mask:
+                segm_results = self.simple_test_mask(
+                    x, img_metas, det_bboxes, det_labels, rescale=rescale)
+                return det_bboxes, det_labels, segm_results
+            return det_bboxes, det_labels
+
         bbox_results = [
             bbox2result(det_bboxes[i], det_labels[i],
                         self.bbox_head.num_classes)
