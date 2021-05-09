@@ -1,9 +1,10 @@
 import torch
 
-filename = '../work_dirs/imagenet_resnet50_carafed_3_kernelexp/epoch_100.pth'
+# filename = '../work_dirs/imagenet_resnet50_carafed_3_kernelexp/epoch_100.pth'
+filename = '../work_dirs/imagenet_resnet50_carafed/epoch_90.pth'
 configname = filename.split('/')[2]
-# savename = filename.replace('../work_dirs/ipth'+'epoch_100.pth', configname+'_pretrained.pth')
-savename = '../work_dirs/ipth/'+configname+'_pretrained.pth'
+savename = '../work_dirs/ipth/'+configname+'_pretrained_ep90.pth'
+
 
 pretrained_dict = torch.load(filename)
 new_dict = {}

@@ -15,7 +15,7 @@ chmod 777 ./tools/dist_train.sh
 ## PORT=7082 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__FPN.py 8
 ## PORT=7083 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__FPN_MH.py 8
 
-PORT=7010 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x__BK.py 8
-PORT=7011 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py 8
-PORT=7020 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH_BK.py 8
+## PORT=7010 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x__BK.py 8
+## PORT=7011 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py 8
+## PORT=7020 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH_BK.py 8
 PORT=7021 ./tools/dist_train.sh configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH_BK.py 8

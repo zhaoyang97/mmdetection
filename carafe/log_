@@ -25,26 +25,45 @@ faster | carafepp | 2x | exp
 faster | carafeh  | 1x         20h
 ========================
 
+
+
+# ep90
+configs/mask_carafe/carafepp_coco_faster_r50_1x.py                       # rtx01
+configs/mask_carafe/carafepp_coco_faster_r50_1x_3_kernelexp.py           # rtx02
+
+configs/faster_carafe/carafed_coco_faster_r50_1x.py                      # lsq 3961
+configs/faster_carafe/carafed_coco_faster_r50_1x_3_kernelexp.py          # lsq 3962
+
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__BK.py                    # lsq 3965
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py        # lsq 3966
+configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH_BK.py             # lsq 3963
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH_BK.py # lsq 3964
+
+
+
+
+
 configs/faster_carafe/carafed_coco_faster_r50_1x.py                      # lsq 3939
 configs/faster_carafe/carafed_coco_faster_r50_1x_3_kernelexp.py          # lsq 3940
+
+configs/faster_carafe/carafepp_coco_faster_r50_1x.py                     # lsq 3941
+configs/faster_carafe/carafepp_coco_faster_r50_1x_3_kernelexp.py         # lsq 3942
+
+# faster fpn
+configs/faster_carafe/coco_faster_r50_1x_carafe_3_exp.py                 # lsq 3893
+# mask fpn & maskhead
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__MH.py              # lsq 3894
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__FPN.py             # lsq 3895
+
+
+
+============================== DONE ==============================
+
 
 configs/mask_carafe/carafeppp_coco_mask_r50_1x__BK.py                    # rtx01
 configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py        # rtx01
 configs/mask_carafe/carafeppp_coco_mask_r50_1x__FPN_MH_BK.py             # rtx02
 configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH_BK.py # rtx02
-
-configs/faster_carafe/carafepp_coco_faster_r50_1x.py                     # lsq 3941
-configs/faster_carafe/carafepp_coco_faster_r50_1x_3_kernelexp.py         # lsq 3942
-
-
-# faster fpn
-configs/faster_carafe/coco_faster_r50_1x_carafe_3_exp.py                # lsq 3893
-# mask fpn & maskhead
-configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__MH.py             # lsq 3894
-configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__FPN.py            # lsq 3895
-configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_exp__FPN_MH.py         # lsq 3896
-
-
 
 
 # Table 3 | 2image * 8gpus |
