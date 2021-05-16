@@ -86,14 +86,15 @@ class CARAFE_Downsample_3_kernelexp(nn.Module):
         kaiming_init(self.kernel_encoder)
 
     def kernel_normalizer(self, mask, compressed_x):
-        # mask = F.pixel_shuffle(mask, self.scale_factor) # no needed for down_sample
-
+        ### -init
         compressed_x = self.kernel_encoder(compressed_x)
         i = self.PI(compressed_x)
-        i = torch.clamp(i, max=5)
-        # i = torch.clamp(i, 1.00001)
-        # mask = torch.clamp(mask, 1.00001)
-        mask = mask * torch.exp(i)
+        i = torch.clamp(i, -10, 10)
+        # i = torch.clamp(i, max=5)
+        # mask = mask * torch.exp(i)
+        # mask = mask * i.exp()
+        mask = mask * i
+        ### init-
 
         n, mask_c, h, w = mask.size()
         mask_channel = int(mask_c / (self.kernel_size * self.kernel_size))

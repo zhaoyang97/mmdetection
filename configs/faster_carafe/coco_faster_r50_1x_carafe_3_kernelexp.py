@@ -8,6 +8,7 @@ _base_ = [
 # img_scale = (100, 60)
 img_scale=(1333, 800)
 
+
 model = dict(
     neck=dict(
         # type='FPN_CARAFE_3_pow',

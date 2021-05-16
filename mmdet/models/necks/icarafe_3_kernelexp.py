@@ -75,7 +75,14 @@ class CARAFE_3_kernelexp(nn.Module):
         # i = torch.clamp(i, 0.00001)
         # W = torch.clamp(W, 0.00001)
         # W = torch.pow(W, P)
+
+        # W = W * torch.exp(P)
+
+        P = torch.clamp(P, -10, 10)
         W = W * torch.exp(P)
+
+
+
         # W = F.normalize(W, p=1, dim=1)
         W = F.softmax(W, dim=1)
 
