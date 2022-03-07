@@ -1,0 +1,412 @@
+2020-10-28 21:59:07,618 - mmdet - INFO - Environment info:
+------------------------------------------------------------
+sys.platform: linux
+Python: 3.6.12 |Anaconda, Inc.| (default, Sep  8 2020, 23:10:56) [GCC 7.3.0]
+CUDA available: True
+GPU 0,1,2,3: GeForce RTX 2080 Ti
+CUDA_HOME: /usr/local/cuda
+NVCC: Cuda compilation tools, release 10.0, V10.0.130
+GCC: gcc (Ubuntu 5.4.0-6ubuntu1~16.04.11) 5.4.0 20160609
+PyTorch: 1.4.0
+PyTorch compiling details: PyTorch built with:
+  - GCC 7.3
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v0.21.1 (Git Hash 7d2fd500bc78936d1d648ca713b901012f470dbc)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CUDA Runtime 10.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 7.6.3
+  - Magma 2.5.1
+  - Build settings: BLAS=MKL, BUILD_NAMEDTENSOR=OFF, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -fopenmp -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -O2 -fPIC -Wno-narrowing -Wall -Wextra -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Wno-stringop-overflow, DISABLE_NUMA=1, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_STATIC_DISPATCH=OFF, 
+
+TorchVision: 0.5.0
+OpenCV: 4.4.0
+MMCV: 1.1.5
+MMCV Compiler: GCC 7.3
+MMCV CUDA Compiler: 10.0
+MMDetection: 2.5.0+
+------------------------------------------------------------
+
+2020-10-28 21:59:10,482 - mmdet - INFO - Distributed training: True
+2020-10-28 21:59:13,205 - mmdet - INFO - Config:
+model = dict(
+    type='FasterRCNN',
+    pretrained='icode/moco_v2_800ep_pretrain_rename.pth',
+    backbone=dict(
+        type='ResNet',
+        depth=50,
+        num_stages=4,
+        out_indices=(0, 1, 2, 3),
+        frozen_stages=1,
+        norm_cfg=dict(type='BN', requires_grad=True),
+        norm_eval=True,
+        style='pytorch'),
+    neck=dict(
+        type='FPN',
+        in_channels=[256, 512, 1024, 2048],
+        out_channels=256,
+        num_outs=5),
+    rpn_head=dict(
+        type='RPNHead',
+        in_channels=256,
+        feat_channels=256,
+        anchor_generator=dict(
+            type='AnchorGenerator',
+            scales=[8],
+            ratios=[0.5, 1.0, 2.0],
+            strides=[4, 8, 16, 32, 64]),
+        bbox_coder=dict(
+            type='DeltaXYWHBBoxCoder',
+            target_means=[0.0, 0.0, 0.0, 0.0],
+            target_stds=[1.0, 1.0, 1.0, 1.0]),
+        loss_cls=dict(
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
+        loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
+    roi_head=dict(
+        type='StandardRoIHead',
+        bbox_roi_extractor=dict(
+            type='SingleRoIExtractor',
+            roi_layer=dict(type='RoIAlign', output_size=7, sampling_ratio=0),
+            out_channels=256,
+            featmap_strides=[4, 8, 16, 32]),
+        bbox_head=dict(
+            type='Shared2FCBBoxHead',
+            in_channels=256,
+            fc_out_channels=1024,
+            roi_feat_size=7,
+            num_classes=21,
+            bbox_coder=dict(
+                type='DeltaXYWHBBoxCoder',
+                target_means=[0.0, 0.0, 0.0, 0.0],
+                target_stds=[0.1, 0.1, 0.2, 0.2]),
+            reg_class_agnostic=False,
+            loss_cls=dict(
+                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
+            loss_bbox=dict(type='L1Loss', loss_weight=1.0))))
+train_cfg = dict(
+    rpn=dict(
+        assigner=dict(
+            type='MaxIoUAssigner',
+            pos_iou_thr=0.7,
+            neg_iou_thr=0.3,
+            min_pos_iou=0.3,
+            match_low_quality=True,
+            ignore_iof_thr=-1),
+        sampler=dict(
+            type='RandomSampler',
+            num=256,
+            pos_fraction=0.5,
+            neg_pos_ub=-1,
+            add_gt_as_proposals=False),
+        allowed_border=-1,
+        pos_weight=-1,
+        debug=False),
+    rpn_proposal=dict(
+        nms_across_levels=False,
+        nms_pre=2000,
+        nms_post=1000,
+        max_num=1000,
+        nms_thr=0.7,
+        min_bbox_size=0),
+    rcnn=dict(
+        assigner=dict(
+            type='MaxIoUAssigner',
+            pos_iou_thr=0.5,
+            neg_iou_thr=0.5,
+            min_pos_iou=0.5,
+            match_low_quality=False,
+            ignore_iof_thr=-1),
+        sampler=dict(
+            type='RandomSampler',
+            num=512,
+            pos_fraction=0.25,
+            neg_pos_ub=-1,
+            add_gt_as_proposals=True),
+        pos_weight=-1,
+        debug=False))
+test_cfg = dict(
+    rpn=dict(
+        nms_across_levels=False,
+        nms_pre=1000,
+        nms_post=1000,
+        max_num=1000,
+        nms_thr=0.7,
+        min_bbox_size=0),
+    rcnn=dict(
+        score_thr=0.05,
+        nms=dict(type='nms', iou_threshold=0.5),
+        max_per_img=100))
+dataset_type = 'VOCDataset'
+data_root = '/root/userfolder/data/voc0712/VOCdevkit/'
+img_norm_cfg = dict(
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(type='Resize', img_scale=(1000, 600), keep_ratio=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='Normalize',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        to_rgb=True),
+    dict(type='Pad', size_divisor=32),
+    dict(type='DefaultFormatBundle'),
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(1000, 600),
+        flip=False,
+        transforms=[
+            dict(type='Resize', keep_ratio=True),
+            dict(type='RandomFlip'),
+            dict(
+                type='Normalize',
+                mean=[123.675, 116.28, 103.53],
+                std=[58.395, 57.12, 57.375],
+                to_rgb=True),
+            dict(type='Pad', size_divisor=32),
+            dict(type='ImageToTensor', keys=['img']),
+            dict(type='Collect', keys=['img'])
+        ])
+]
+data = dict(
+    samples_per_gpu=2,
+    workers_per_gpu=0,
+    train=dict(
+        type='RepeatDataset',
+        times=3,
+        dataset=dict(
+            type='VOCDataset',
+            ann_file=[
+                '/root/userfolder/data/voc0712/VOCdevkit/VOC2007/ImageSets/Main/trainval.txt',
+                '/root/userfolder/data/voc0712/VOCdevkit/VOC2012/ImageSets/Main/trainval.txt'
+            ],
+            img_prefix=[
+                '/root/userfolder/data/voc0712/VOCdevkit/VOC2007/',
+                '/root/userfolder/data/voc0712/VOCdevkit/VOC2012/'
+            ],
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='LoadAnnotations', with_bbox=True),
+                dict(type='Resize', img_scale=(1000, 600), keep_ratio=True),
+                dict(type='RandomFlip', flip_ratio=0.5),
+                dict(
+                    type='Normalize',
+                    mean=[123.675, 116.28, 103.53],
+                    std=[58.395, 57.12, 57.375],
+                    to_rgb=True),
+                dict(type='Pad', size_divisor=32),
+                dict(type='DefaultFormatBundle'),
+                dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+            ])),
+    val=dict(
+        type='VOCDataset',
+        ann_file=
+        '/root/userfolder/data/voc0712/VOCdevkit/VOC2007/ImageSets/Main/test.txt',
+        img_prefix='/root/userfolder/data/voc0712/VOCdevkit/VOC2007/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1000, 600),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[123.675, 116.28, 103.53],
+                        std=[58.395, 57.12, 57.375],
+                        to_rgb=True),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]),
+    test=dict(
+        type='VOCDataset',
+        ann_file=
+        '/root/userfolder/data/voc0712/VOCdevkit/VOC2007/ImageSets/Main/test.txt',
+        img_prefix='/root/userfolder/data/voc0712/VOCdevkit/VOC2007/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1000, 600),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[123.675, 116.28, 103.53],
+                        std=[58.395, 57.12, 57.375],
+                        to_rgb=True),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]))
+evaluation = dict(interval=1, metric='mAP')
+optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
+optimizer_config = dict(grad_clip=None)
+lr_config = dict(
+    policy='step',
+    warmup='linear',
+    warmup_iters=500,
+    warmup_ratio=0.001,
+    step=[8, 11])
+total_epochs = 12
+checkpoint_config = dict(interval=1)
+log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
+dist_params = dict(backend='nccl')
+log_level = 'INFO'
+load_from = None
+resume_from = None
+workflow = [('train', 1)]
+work_dir = './work_dirs/faster_rcnn_r50_fpn_1x_voc_moco'
+gpu_ids = range(0, 1)
+
+2020-10-28 21:59:13,627 - mmdet - INFO - load model from: icode/moco_v2_800ep_pretrain_rename.pth
+2020-10-28 21:59:13,751 - mmdet - WARNING - The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: fc.0.weight, fc.0.bias, fc.2.weight, fc.2.bias
+
+2020-10-28 21:59:21,410 - mmdet - INFO - Start running, host: root@95b7482644c5, work_dir: /root/userfolder/mmdetection/work_dirs/faster_rcnn_r50_fpn_1x_voc_moco
+2020-10-28 21:59:21,410 - mmdet - INFO - workflow: [('train', 1)], max: 12 epochs
+2020-10-28 21:59:39,109 - mmdet - INFO - Epoch [1][50/6207]	lr: 1.978e-03, eta: 7:16:55, time: 0.352, data_time: 0.141, memory: 2569, loss_rpn_cls: 0.4734, loss_rpn_bbox: 0.0295, loss_cls: 1.6887, acc: 82.0728, loss_bbox: 0.0448, loss: 2.2364
+2020-10-28 21:59:53,271 - mmdet - INFO - Epoch [1][100/6207]	lr: 3.976e-03, eta: 6:33:41, time: 0.283, data_time: 0.094, memory: 2569, loss_rpn_cls: 0.0896, loss_rpn_bbox: 0.0244, loss_cls: 0.3742, acc: 96.0806, loss_bbox: 0.1539, loss: 0.6421
+2020-10-28 22:00:07,292 - mmdet - INFO - Epoch [1][150/6207]	lr: 5.974e-03, eta: 6:18:10, time: 0.281, data_time: 0.095, memory: 2569, loss_rpn_cls: 0.0801, loss_rpn_bbox: 0.0210, loss_cls: 0.3506, acc: 96.1440, loss_bbox: 0.1519, loss: 0.6036
+2020-10-28 22:00:21,398 - mmdet - INFO - Epoch [1][200/6207]	lr: 7.972e-03, eta: 6:10:45, time: 0.282, data_time: 0.096, memory: 2569, loss_rpn_cls: 0.0734, loss_rpn_bbox: 0.0204, loss_cls: 0.3445, acc: 95.9482, loss_bbox: 0.1612, loss: 0.5994
+2020-10-28 22:00:35,697 - mmdet - INFO - Epoch [1][250/6207]	lr: 9.970e-03, eta: 6:07:07, time: 0.286, data_time: 0.100, memory: 2569, loss_rpn_cls: 0.0791, loss_rpn_bbox: 0.0242, loss_cls: 0.2968, acc: 95.9224, loss_bbox: 0.1591, loss: 0.5591
+2020-10-28 22:00:49,778 - mmdet - INFO - Epoch [1][300/6207]	lr: 1.197e-02, eta: 6:03:46, time: 0.282, data_time: 0.098, memory: 2569, loss_rpn_cls: 0.0713, loss_rpn_bbox: 0.0200, loss_cls: 0.2713, acc: 96.0986, loss_bbox: 0.1538, loss: 0.5164
+2020-10-28 22:01:05,116 - mmdet - INFO - Epoch [1][350/6207]	lr: 1.397e-02, eta: 6:05:41, time: 0.306, data_time: 0.099, memory: 2569, loss_rpn_cls: 0.0700, loss_rpn_bbox: 0.0234, loss_cls: 0.2965, acc: 95.3730, loss_bbox: 0.1837, loss: 0.5736
+2020-10-28 22:01:21,012 - mmdet - INFO - Epoch [1][400/6207]	lr: 1.596e-02, eta: 6:08:46, time: 0.318, data_time: 0.099, memory: 2569, loss_rpn_cls: 0.0626, loss_rpn_bbox: 0.0210, loss_cls: 0.2776, acc: 95.5146, loss_bbox: 0.1769, loss: 0.5380
+2020-10-28 22:01:37,225 - mmdet - INFO - Epoch [1][450/6207]	lr: 1.796e-02, eta: 6:12:02, time: 0.324, data_time: 0.094, memory: 2569, loss_rpn_cls: 0.0675, loss_rpn_bbox: 0.0220, loss_cls: 0.2827, acc: 95.6284, loss_bbox: 0.1729, loss: 0.5451
+2020-10-28 22:01:53,629 - mmdet - INFO - Epoch [1][500/6207]	lr: 1.996e-02, eta: 6:15:05, time: 0.328, data_time: 0.086, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 72.9780, loss_bbox: nan, loss: nan
+2020-10-28 22:02:09,768 - mmdet - INFO - Epoch [1][550/6207]	lr: 2.000e-02, eta: 6:16:53, time: 0.323, data_time: 0.093, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0093, loss_bbox: nan, loss: nan
+2020-10-28 22:02:25,867 - mmdet - INFO - Epoch [1][600/6207]	lr: 2.000e-02, eta: 6:18:17, time: 0.322, data_time: 0.099, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0093, loss_bbox: nan, loss: nan
+2020-10-28 22:02:40,519 - mmdet - INFO - Epoch [1][650/6207]	lr: 2.000e-02, eta: 6:16:43, time: 0.293, data_time: 0.101, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.5044, loss_bbox: nan, loss: nan
+2020-10-28 22:02:54,637 - mmdet - INFO - Epoch [1][700/6207]	lr: 2.000e-02, eta: 6:14:22, time: 0.282, data_time: 0.098, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.5068, loss_bbox: nan, loss: nan
+2020-10-28 22:03:08,468 - mmdet - INFO - Epoch [1][750/6207]	lr: 2.000e-02, eta: 6:11:52, time: 0.277, data_time: 0.096, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7612, loss_bbox: nan, loss: nan
+2020-10-28 22:03:22,677 - mmdet - INFO - Epoch [1][800/6207]	lr: 2.000e-02, eta: 6:10:12, time: 0.284, data_time: 0.093, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.5117, loss_bbox: nan, loss: nan
+2020-10-28 22:03:37,058 - mmdet - INFO - Epoch [1][850/6207]	lr: 2.000e-02, eta: 6:08:56, time: 0.287, data_time: 0.098, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0132, loss_bbox: nan, loss: nan
+2020-10-28 22:03:51,120 - mmdet - INFO - Epoch [1][900/6207]	lr: 2.000e-02, eta: 6:07:21, time: 0.281, data_time: 0.095, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.5107, loss_bbox: nan, loss: nan
+2020-10-28 22:04:05,210 - mmdet - INFO - Epoch [1][950/6207]	lr: 2.000e-02, eta: 6:05:59, time: 0.282, data_time: 0.097, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0054, loss_bbox: nan, loss: nan
+2020-10-28 22:04:19,508 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_voc_moco.py
+2020-10-28 22:04:19,508 - mmdet - INFO - Epoch [1][1000/6207]	lr: 2.000e-02, eta: 6:04:57, time: 0.286, data_time: 0.104, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.7549, loss_bbox: nan, loss: nan
+2020-10-28 22:04:33,838 - mmdet - INFO - Epoch [1][1050/6207]	lr: 2.000e-02, eta: 6:04:02, time: 0.286, data_time: 0.094, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5107, loss_bbox: nan, loss: nan
+2020-10-28 22:04:47,715 - mmdet - INFO - Epoch [1][1100/6207]	lr: 2.000e-02, eta: 6:02:40, time: 0.277, data_time: 0.094, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0073, loss_bbox: nan, loss: nan
+2020-10-28 22:05:01,600 - mmdet - INFO - Epoch [1][1150/6207]	lr: 2.000e-02, eta: 6:01:26, time: 0.278, data_time: 0.094, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.2568, loss_bbox: nan, loss: nan
+2020-10-28 22:05:15,324 - mmdet - INFO - Epoch [1][1200/6207]	lr: 2.000e-02, eta: 6:00:06, time: 0.274, data_time: 0.093, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0078, loss_bbox: nan, loss: nan
+2020-10-28 22:05:29,504 - mmdet - INFO - Epoch [1][1250/6207]	lr: 2.000e-02, eta: 5:59:18, time: 0.284, data_time: 0.097, memory: 2569, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0112, loss_bbox: nan, loss: nan
+2020-10-28 22:05:43,610 - mmdet - INFO - Epoch [1][1300/6207]	lr: 2.000e-02, eta: 5:58:29, time: 0.282, data_time: 0.097, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.2573, loss_bbox: nan, loss: nan
+2020-10-28 22:05:57,481 - mmdet - INFO - Epoch [1][1350/6207]	lr: 2.000e-02, eta: 5:57:30, time: 0.277, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.5103, loss_bbox: nan, loss: nan
+2020-10-28 22:06:11,424 - mmdet - INFO - Epoch [1][1400/6207]	lr: 2.000e-02, eta: 5:56:37, time: 0.279, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.2603, loss_bbox: nan, loss: nan
+2020-10-28 22:06:25,449 - mmdet - INFO - Epoch [1][1450/6207]	lr: 2.000e-02, eta: 5:55:52, time: 0.280, data_time: 0.094, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5088, loss_bbox: nan, loss: nan
+2020-10-28 22:06:39,377 - mmdet - INFO - Epoch [1][1500/6207]	lr: 2.000e-02, eta: 5:55:03, time: 0.278, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7646, loss_bbox: nan, loss: nan
+2020-10-28 22:06:53,691 - mmdet - INFO - Epoch [1][1550/6207]	lr: 2.000e-02, eta: 5:54:35, time: 0.286, data_time: 0.094, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7524, loss_bbox: nan, loss: nan
+2020-10-28 22:07:07,798 - mmdet - INFO - Epoch [1][1600/6207]	lr: 2.000e-02, eta: 5:53:59, time: 0.282, data_time: 0.094, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5098, loss_bbox: nan, loss: nan
+2020-10-28 22:07:21,624 - mmdet - INFO - Epoch [1][1650/6207]	lr: 2.000e-02, eta: 5:53:11, time: 0.276, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7627, loss_bbox: nan, loss: nan
+2020-10-28 22:07:35,383 - mmdet - INFO - Epoch [1][1700/6207]	lr: 2.000e-02, eta: 5:52:23, time: 0.275, data_time: 0.091, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.7759, loss_bbox: nan, loss: nan
+2020-10-28 22:07:49,224 - mmdet - INFO - Epoch [1][1750/6207]	lr: 2.000e-02, eta: 5:51:40, time: 0.277, data_time: 0.091, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.7578, loss_bbox: nan, loss: nan
+2020-10-28 22:08:03,208 - mmdet - INFO - Epoch [1][1800/6207]	lr: 2.000e-02, eta: 5:51:04, time: 0.280, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7578, loss_bbox: nan, loss: nan
+2020-10-28 22:08:17,300 - mmdet - INFO - Epoch [1][1850/6207]	lr: 2.000e-02, eta: 5:50:34, time: 0.282, data_time: 0.097, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0054, loss_bbox: nan, loss: nan
+2020-10-28 22:08:32,234 - mmdet - INFO - Epoch [1][1900/6207]	lr: 2.000e-02, eta: 5:50:37, time: 0.299, data_time: 0.103, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5073, loss_bbox: nan, loss: nan
+2020-10-28 22:08:46,246 - mmdet - INFO - Epoch [1][1950/6207]	lr: 2.000e-02, eta: 5:50:05, time: 0.281, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.6348, loss_bbox: nan, loss: nan
+2020-10-28 22:09:00,076 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_voc_moco.py
+2020-10-28 22:09:00,076 - mmdet - INFO - Epoch [1][2000/6207]	lr: 2.000e-02, eta: 5:49:27, time: 0.276, data_time: 0.092, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7573, loss_bbox: nan, loss: nan
+2020-10-28 22:09:14,383 - mmdet - INFO - Epoch [1][2050/6207]	lr: 2.000e-02, eta: 5:49:07, time: 0.286, data_time: 0.099, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5078, loss_bbox: nan, loss: nan
+2020-10-28 22:09:28,318 - mmdet - INFO - Epoch [1][2100/6207]	lr: 2.000e-02, eta: 5:48:34, time: 0.279, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7578, loss_bbox: nan, loss: nan
+2020-10-28 22:09:42,568 - mmdet - INFO - Epoch [1][2150/6207]	lr: 2.000e-02, eta: 5:48:13, time: 0.285, data_time: 0.100, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7617, loss_bbox: nan, loss: nan
+2020-10-28 22:09:56,495 - mmdet - INFO - Epoch [1][2200/6207]	lr: 2.000e-02, eta: 5:47:42, time: 0.279, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0107, loss_bbox: nan, loss: nan
+2020-10-28 22:10:10,642 - mmdet - INFO - Epoch [1][2250/6207]	lr: 2.000e-02, eta: 5:47:18, time: 0.283, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.3828, loss_bbox: nan, loss: nan
+2020-10-28 22:10:24,491 - mmdet - INFO - Epoch [1][2300/6207]	lr: 2.000e-02, eta: 5:46:46, time: 0.277, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5176, loss_bbox: nan, loss: nan
+2020-10-28 22:10:38,677 - mmdet - INFO - Epoch [1][2350/6207]	lr: 2.000e-02, eta: 5:46:24, time: 0.284, data_time: 0.097, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.7559, loss_bbox: nan, loss: nan
+2020-10-28 22:10:52,647 - mmdet - INFO - Epoch [1][2400/6207]	lr: 2.000e-02, eta: 5:45:56, time: 0.279, data_time: 0.089, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.7578, loss_bbox: nan, loss: nan
+2020-10-28 22:11:06,718 - mmdet - INFO - Epoch [1][2450/6207]	lr: 2.000e-02, eta: 5:45:33, time: 0.282, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.2559, loss_bbox: nan, loss: nan
+2020-10-28 22:11:20,670 - mmdet - INFO - Epoch [1][2500/6207]	lr: 2.000e-02, eta: 5:45:06, time: 0.279, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5073, loss_bbox: nan, loss: nan
+2020-10-28 22:11:34,665 - mmdet - INFO - Epoch [1][2550/6207]	lr: 2.000e-02, eta: 5:44:40, time: 0.280, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.7603, loss_bbox: nan, loss: nan
+2020-10-28 22:11:48,660 - mmdet - INFO - Epoch [1][2600/6207]	lr: 2.000e-02, eta: 5:44:16, time: 0.280, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 3.5098, loss_bbox: nan, loss: nan
+2020-10-28 22:12:02,825 - mmdet - INFO - Epoch [1][2650/6207]	lr: 2.000e-02, eta: 5:43:55, time: 0.283, data_time: 0.097, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.2559, loss_bbox: nan, loss: nan
+2020-10-28 22:12:16,762 - mmdet - INFO - Epoch [1][2700/6207]	lr: 2.000e-02, eta: 5:43:30, time: 0.279, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.5083, loss_bbox: nan, loss: nan
+2020-10-28 22:12:30,582 - mmdet - INFO - Epoch [1][2750/6207]	lr: 2.000e-02, eta: 5:43:02, time: 0.276, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.5078, loss_bbox: nan, loss: nan
+2020-10-28 22:12:44,738 - mmdet - INFO - Epoch [1][2800/6207]	lr: 2.000e-02, eta: 5:42:42, time: 0.283, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0112, loss_bbox: nan, loss: nan
+2020-10-28 22:12:58,679 - mmdet - INFO - Epoch [1][2850/6207]	lr: 2.000e-02, eta: 5:42:18, time: 0.279, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.2563, loss_bbox: nan, loss: nan
+2020-10-28 22:13:12,647 - mmdet - INFO - Epoch [1][2900/6207]	lr: 2.000e-02, eta: 5:41:54, time: 0.279, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.5034, loss_bbox: nan, loss: nan
+2020-10-28 22:13:26,598 - mmdet - INFO - Epoch [1][2950/6207]	lr: 2.000e-02, eta: 5:41:31, time: 0.279, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.1313, loss_bbox: nan, loss: nan
+2020-10-28 22:13:41,153 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_voc_moco.py
+2020-10-28 22:13:41,154 - mmdet - INFO - Epoch [1][3000/6207]	lr: 2.000e-02, eta: 5:41:21, time: 0.291, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7598, loss_bbox: nan, loss: nan
+2020-10-28 22:13:56,117 - mmdet - INFO - Epoch [1][3050/6207]	lr: 2.000e-02, eta: 5:41:22, time: 0.299, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7612, loss_bbox: nan, loss: nan
+2020-10-28 22:14:10,580 - mmdet - INFO - Epoch [1][3100/6207]	lr: 2.000e-02, eta: 5:41:11, time: 0.290, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.2549, loss_bbox: nan, loss: nan
+2020-10-28 22:14:24,648 - mmdet - INFO - Epoch [1][3150/6207]	lr: 2.000e-02, eta: 5:40:51, time: 0.281, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.7583, loss_bbox: nan, loss: nan
+2020-10-28 22:14:39,339 - mmdet - INFO - Epoch [1][3200/6207]	lr: 2.000e-02, eta: 5:40:44, time: 0.293, data_time: 0.104, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.7637, loss_bbox: nan, loss: nan
+2020-10-28 22:14:53,940 - mmdet - INFO - Epoch [1][3250/6207]	lr: 2.000e-02, eta: 5:40:35, time: 0.292, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0078, loss_bbox: nan, loss: nan
+2020-10-28 22:15:07,788 - mmdet - INFO - Epoch [1][3300/6207]	lr: 2.000e-02, eta: 5:40:10, time: 0.277, data_time: 0.088, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5068, loss_bbox: nan, loss: nan
+2020-10-28 22:15:21,774 - mmdet - INFO - Epoch [1][3350/6207]	lr: 2.000e-02, eta: 5:39:49, time: 0.280, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.2559, loss_bbox: nan, loss: nan
+2020-10-28 22:15:35,847 - mmdet - INFO - Epoch [1][3400/6207]	lr: 2.000e-02, eta: 5:39:29, time: 0.281, data_time: 0.097, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.7554, loss_bbox: nan, loss: nan
+2020-10-28 22:15:49,897 - mmdet - INFO - Epoch [1][3450/6207]	lr: 2.000e-02, eta: 5:39:09, time: 0.281, data_time: 0.094, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0161, loss_bbox: nan, loss: nan
+2020-10-28 22:16:04,093 - mmdet - INFO - Epoch [1][3500/6207]	lr: 2.000e-02, eta: 5:38:52, time: 0.284, data_time: 0.093, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.2612, loss_bbox: nan, loss: nan
+2020-10-28 22:16:18,227 - mmdet - INFO - Epoch [1][3550/6207]	lr: 2.000e-02, eta: 5:38:34, time: 0.283, data_time: 0.099, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.2607, loss_bbox: nan, loss: nan
+2020-10-28 22:16:32,411 - mmdet - INFO - Epoch [1][3600/6207]	lr: 2.000e-02, eta: 5:38:17, time: 0.284, data_time: 0.100, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5054, loss_bbox: nan, loss: nan
+2020-10-28 22:16:46,736 - mmdet - INFO - Epoch [1][3650/6207]	lr: 2.000e-02, eta: 5:38:03, time: 0.286, data_time: 0.097, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5186, loss_bbox: nan, loss: nan
+2020-10-28 22:17:01,280 - mmdet - INFO - Epoch [1][3700/6207]	lr: 2.000e-02, eta: 5:37:53, time: 0.291, data_time: 0.101, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.2612, loss_bbox: nan, loss: nan
+2020-10-28 22:17:15,384 - mmdet - INFO - Epoch [1][3750/6207]	lr: 2.000e-02, eta: 5:37:34, time: 0.282, data_time: 0.094, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.5015, loss_bbox: nan, loss: nan
+2020-10-28 22:17:29,532 - mmdet - INFO - Epoch [1][3800/6207]	lr: 2.000e-02, eta: 5:37:17, time: 0.283, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5068, loss_bbox: nan, loss: nan
+2020-10-28 22:17:43,846 - mmdet - INFO - Epoch [1][3850/6207]	lr: 2.000e-02, eta: 5:37:02, time: 0.286, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.7539, loss_bbox: nan, loss: nan
+2020-10-28 22:17:57,903 - mmdet - INFO - Epoch [1][3900/6207]	lr: 2.000e-02, eta: 5:36:43, time: 0.281, data_time: 0.091, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 3.2632, loss_bbox: nan, loss: nan
+2020-10-28 22:18:12,283 - mmdet - INFO - Epoch [1][3950/6207]	lr: 2.000e-02, eta: 5:36:30, time: 0.288, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5186, loss_bbox: nan, loss: nan
+2020-10-28 22:18:26,439 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_voc_moco.py
+2020-10-28 22:18:26,439 - mmdet - INFO - Epoch [1][4000/6207]	lr: 2.000e-02, eta: 5:36:13, time: 0.283, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.2588, loss_bbox: nan, loss: nan
+2020-10-28 22:18:41,149 - mmdet - INFO - Epoch [1][4050/6207]	lr: 2.000e-02, eta: 5:36:06, time: 0.294, data_time: 0.106, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7598, loss_bbox: nan, loss: nan
+2020-10-28 22:18:55,815 - mmdet - INFO - Epoch [1][4100/6207]	lr: 2.000e-02, eta: 5:35:58, time: 0.293, data_time: 0.099, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7637, loss_bbox: nan, loss: nan
+2020-10-28 22:19:10,038 - mmdet - INFO - Epoch [1][4150/6207]	lr: 2.000e-02, eta: 5:35:41, time: 0.284, data_time: 0.099, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0112, loss_bbox: nan, loss: nan
+2020-10-28 22:19:24,375 - mmdet - INFO - Epoch [1][4200/6207]	lr: 2.000e-02, eta: 5:35:28, time: 0.287, data_time: 0.097, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0103, loss_bbox: nan, loss: nan
+2020-10-28 22:19:38,452 - mmdet - INFO - Epoch [1][4250/6207]	lr: 2.000e-02, eta: 5:35:09, time: 0.281, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5142, loss_bbox: nan, loss: nan
+2020-10-28 22:19:52,582 - mmdet - INFO - Epoch [1][4300/6207]	lr: 2.000e-02, eta: 5:34:52, time: 0.282, data_time: 0.099, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.7646, loss_bbox: nan, loss: nan
+2020-10-28 22:20:06,992 - mmdet - INFO - Epoch [1][4350/6207]	lr: 2.000e-02, eta: 5:34:39, time: 0.288, data_time: 0.100, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0078, loss_bbox: nan, loss: nan
+2020-10-28 22:20:21,993 - mmdet - INFO - Epoch [1][4400/6207]	lr: 2.000e-02, eta: 5:34:36, time: 0.300, data_time: 0.115, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5103, loss_bbox: nan, loss: nan
+2020-10-28 22:20:37,154 - mmdet - INFO - Epoch [1][4450/6207]	lr: 2.000e-02, eta: 5:34:34, time: 0.303, data_time: 0.102, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.2559, loss_bbox: nan, loss: nan
+2020-10-28 22:20:53,507 - mmdet - INFO - Epoch [1][4500/6207]	lr: 2.000e-02, eta: 5:34:51, time: 0.327, data_time: 0.091, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.5078, loss_bbox: nan, loss: nan
+2020-10-28 22:21:09,791 - mmdet - INFO - Epoch [1][4550/6207]	lr: 2.000e-02, eta: 5:35:06, time: 0.326, data_time: 0.103, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7568, loss_bbox: nan, loss: nan
+2020-10-28 22:21:25,847 - mmdet - INFO - Epoch [1][4600/6207]	lr: 2.000e-02, eta: 5:35:18, time: 0.321, data_time: 0.103, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5107, loss_bbox: nan, loss: nan
+2020-10-28 22:21:41,889 - mmdet - INFO - Epoch [1][4650/6207]	lr: 2.000e-02, eta: 5:35:28, time: 0.320, data_time: 0.103, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7578, loss_bbox: nan, loss: nan
+2020-10-28 22:21:58,024 - mmdet - INFO - Epoch [1][4700/6207]	lr: 2.000e-02, eta: 5:35:39, time: 0.323, data_time: 0.104, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0103, loss_bbox: nan, loss: nan
+2020-10-28 22:22:13,899 - mmdet - INFO - Epoch [1][4750/6207]	lr: 2.000e-02, eta: 5:35:46, time: 0.318, data_time: 0.099, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0107, loss_bbox: nan, loss: nan
+2020-10-28 22:22:28,356 - mmdet - INFO - Epoch [1][4800/6207]	lr: 2.000e-02, eta: 5:35:32, time: 0.289, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0093, loss_bbox: nan, loss: nan
+2020-10-28 22:22:43,952 - mmdet - INFO - Epoch [1][4850/6207]	lr: 2.000e-02, eta: 5:35:34, time: 0.312, data_time: 0.105, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.2573, loss_bbox: nan, loss: nan
+2020-10-28 22:22:59,696 - mmdet - INFO - Epoch [1][4900/6207]	lr: 2.000e-02, eta: 5:35:38, time: 0.315, data_time: 0.092, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.6333, loss_bbox: nan, loss: nan
+2020-10-28 22:23:15,191 - mmdet - INFO - Epoch [1][4950/6207]	lr: 2.000e-02, eta: 5:35:37, time: 0.310, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0015, loss_bbox: nan, loss: nan
+2020-10-28 22:23:30,916 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_voc_moco.py
+2020-10-28 22:23:30,917 - mmdet - INFO - Epoch [1][5000/6207]	lr: 2.000e-02, eta: 5:35:40, time: 0.315, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.2612, loss_bbox: nan, loss: nan
+2020-10-28 22:23:46,622 - mmdet - INFO - Epoch [1][5050/6207]	lr: 2.000e-02, eta: 5:35:42, time: 0.314, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7573, loss_bbox: nan, loss: nan
+2020-10-28 22:24:02,105 - mmdet - INFO - Epoch [1][5100/6207]	lr: 2.000e-02, eta: 5:35:41, time: 0.310, data_time: 0.095, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0083, loss_bbox: nan, loss: nan
+2020-10-28 22:24:17,845 - mmdet - INFO - Epoch [1][5150/6207]	lr: 2.000e-02, eta: 5:35:43, time: 0.314, data_time: 0.104, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.6348, loss_bbox: nan, loss: nan
+2020-10-28 22:24:33,282 - mmdet - INFO - Epoch [1][5200/6207]	lr: 2.000e-02, eta: 5:35:41, time: 0.309, data_time: 0.092, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0088, loss_bbox: nan, loss: nan
+2020-10-28 22:24:48,965 - mmdet - INFO - Epoch [1][5250/6207]	lr: 2.000e-02, eta: 5:35:41, time: 0.313, data_time: 0.096, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0088, loss_bbox: nan, loss: nan
+2020-10-28 22:25:04,481 - mmdet - INFO - Epoch [1][5300/6207]	lr: 2.000e-02, eta: 5:35:39, time: 0.310, data_time: 0.091, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.5088, loss_bbox: nan, loss: nan
+2020-10-28 22:25:20,226 - mmdet - INFO - Epoch [1][5350/6207]	lr: 2.000e-02, eta: 5:35:40, time: 0.315, data_time: 0.097, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7568, loss_bbox: nan, loss: nan
+2020-10-28 22:25:35,758 - mmdet - INFO - Epoch [1][5400/6207]	lr: 2.000e-02, eta: 5:35:38, time: 0.311, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.6299, loss_bbox: nan, loss: nan
+2020-10-28 22:25:50,137 - mmdet - INFO - Epoch [1][5450/6207]	lr: 2.000e-02, eta: 5:35:21, time: 0.288, data_time: 0.100, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0073, loss_bbox: nan, loss: nan
+2020-10-28 22:26:04,638 - mmdet - INFO - Epoch [1][5500/6207]	lr: 2.000e-02, eta: 5:35:06, time: 0.290, data_time: 0.103, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.5078, loss_bbox: nan, loss: nan
+2020-10-28 22:26:18,985 - mmdet - INFO - Epoch [1][5550/6207]	lr: 2.000e-02, eta: 5:34:48, time: 0.287, data_time: 0.101, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.1343, loss_bbox: nan, loss: nan
+2020-10-28 22:26:33,315 - mmdet - INFO - Epoch [1][5600/6207]	lr: 2.000e-02, eta: 5:34:31, time: 0.286, data_time: 0.101, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0142, loss_bbox: nan, loss: nan
+2020-10-28 22:26:47,709 - mmdet - INFO - Epoch [1][5650/6207]	lr: 2.000e-02, eta: 5:34:14, time: 0.288, data_time: 0.098, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.8809, loss_bbox: nan, loss: nan
+2020-10-28 22:27:02,291 - mmdet - INFO - Epoch [1][5700/6207]	lr: 2.000e-02, eta: 5:34:00, time: 0.292, data_time: 0.101, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0103, loss_bbox: nan, loss: nan
+2020-10-28 22:27:16,728 - mmdet - INFO - Epoch [1][5750/6207]	lr: 2.000e-02, eta: 5:33:43, time: 0.288, data_time: 0.100, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.7627, loss_bbox: nan, loss: nan
+2020-10-28 22:27:31,251 - mmdet - INFO - Epoch [1][5800/6207]	lr: 2.000e-02, eta: 5:33:28, time: 0.290, data_time: 0.102, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.2559, loss_bbox: nan, loss: nan
+2020-10-28 22:27:45,693 - mmdet - INFO - Epoch [1][5850/6207]	lr: 2.000e-02, eta: 5:33:12, time: 0.289, data_time: 0.101, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.7549, loss_bbox: nan, loss: nan
+2020-10-28 22:28:00,201 - mmdet - INFO - Epoch [1][5900/6207]	lr: 2.000e-02, eta: 5:32:57, time: 0.290, data_time: 0.100, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.0156, loss_bbox: nan, loss: nan
+2020-10-28 22:28:14,801 - mmdet - INFO - Epoch [1][5950/6207]	lr: 2.000e-02, eta: 5:32:43, time: 0.292, data_time: 0.101, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0127, loss_bbox: nan, loss: nan
+2020-10-28 22:28:29,339 - mmdet - INFO - Exp name: faster_rcnn_r50_fpn_1x_voc_moco.py
+2020-10-28 22:28:29,339 - mmdet - INFO - Epoch [1][6000/6207]	lr: 2.000e-02, eta: 5:32:28, time: 0.291, data_time: 0.103, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.9922, loss_bbox: nan, loss: nan
+2020-10-28 22:28:44,048 - mmdet - INFO - Epoch [1][6050/6207]	lr: 2.000e-02, eta: 5:32:15, time: 0.294, data_time: 0.102, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.2622, loss_bbox: nan, loss: nan
+2020-10-28 22:28:58,438 - mmdet - INFO - Epoch [1][6100/6207]	lr: 2.000e-02, eta: 5:31:59, time: 0.288, data_time: 0.102, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 0.2632, loss_bbox: nan, loss: nan
+2020-10-28 22:29:12,935 - mmdet - INFO - Epoch [1][6150/6207]	lr: 2.000e-02, eta: 5:31:43, time: 0.290, data_time: 0.100, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 2.0015, loss_bbox: nan, loss: nan
+2020-10-28 22:29:27,392 - mmdet - INFO - Epoch [1][6200/6207]	lr: 2.000e-02, eta: 5:31:28, time: 0.289, data_time: 0.101, memory: 2570, loss_rpn_cls: nan, loss_rpn_bbox: nan, loss_cls: nan, acc: 1.5039, loss_bbox: nan, loss: nan
+2020-10-28 22:29:29,465 - mmdet - INFO - Saving checkpoint at 1 epochs
