@@ -1,0 +1,247 @@
+2020-10-16 16:41:00,816 - mmdet - INFO - Environment info:
+------------------------------------------------------------
+sys.platform: linux
+Python: 3.7.9 (default, Aug 31 2020, 12:42:55) [GCC 7.3.0]
+CUDA available: True
+GPU 0,1,2,3: GeForce RTX 2080 Ti
+CUDA_HOME: /usr/local/cuda
+NVCC: Cuda compilation tools, release 10.0, V10.0.130
+GCC: gcc (Ubuntu 5.4.0-6ubuntu1~16.04.11) 5.4.0 20160609
+PyTorch: 1.4.0
+PyTorch compiling details: PyTorch built with:
+  - GCC 7.3
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v0.21.1 (Git Hash 7d2fd500bc78936d1d648ca713b901012f470dbc)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CUDA Runtime 10.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 7.6.3
+  - Magma 2.5.1
+  - Build settings: BLAS=MKL, BUILD_NAMEDTENSOR=OFF, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -fopenmp -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -O2 -fPIC -Wno-narrowing -Wall -Wextra -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Wno-stringop-overflow, DISABLE_NUMA=1, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_STATIC_DISPATCH=OFF, 
+
+TorchVision: 0.5.0
+OpenCV: 4.4.0
+MMCV: 1.1.5
+MMCV Compiler: GCC 7.3
+MMCV CUDA Compiler: 10.0
+MMDetection: 2.5.0+
+------------------------------------------------------------
+
+2020-10-16 16:41:01,407 - mmdet - INFO - Distributed training: True
+2020-10-16 16:41:02,055 - mmdet - INFO - Config:
+dataset_type = 'CocoDataset'
+data_root = 'data/coco/'
+annotations_root = 'annotations/'
+image_root = '/root/userfolder/data/TCTAnnotatedData/'
+classes = ('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+           'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+           'dysbacteriosis_herpes_act', 'ec')
+img_norm_cfg = dict(
+    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
+train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='Normalize',
+        mean=[102.9801, 115.9465, 122.7717],
+        std=[1.0, 1.0, 1.0],
+        to_rgb=False),
+    dict(type='Pad', size_divisor=32),
+    dict(type='DefaultFormatBundle'),
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(1333, 800),
+        flip=False,
+        transforms=[
+            dict(type='Resize', keep_ratio=True),
+            dict(type='RandomFlip'),
+            dict(
+                type='Normalize',
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
+            dict(type='Pad', size_divisor=32),
+            dict(type='ImageToTensor', keys=['img']),
+            dict(type='Collect', keys=['img'])
+        ])
+]
+data = dict(
+    samples_per_gpu=4,
+    workers_per_gpu=0,
+    train=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/train30000-cat10.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+            dict(type='RandomFlip', flip_ratio=0.5),
+            dict(
+                type='Normalize',
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
+            dict(type='Pad', size_divisor=32),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+        ]),
+    val=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/val10000-cat10.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1333, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]),
+    test=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/test10000-cat10.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1333, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]))
+evaluation = dict(interval=1, metric='bbox')
+optimizer = dict(
+    type='SGD',
+    lr=0.001,
+    momentum=0.9,
+    weight_decay=0.0001,
+    paramwise_cfg=dict(bias_lr_mult=2.0, bias_decay_mult=0.0))
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+lr_config = dict(
+    policy='step',
+    warmup='constant',
+    warmup_iters=500,
+    warmup_ratio=0.3333333333333333,
+    step=[8, 11])
+total_epochs = 12
+checkpoint_config = dict(interval=1)
+log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
+dist_params = dict(backend='nccl')
+log_level = 'INFO'
+load_from = None
+resume_from = None
+workflow = [('train', 1)]
+model = dict(
+    type='FCOS',
+    pretrained=
+    'https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar',
+    backbone=dict(
+        type='ResNet',
+        depth=50,
+        num_stages=4,
+        out_indices=(0, 1, 2, 3),
+        frozen_stages=1,
+        norm_cfg=dict(type='BN', requires_grad=False),
+        norm_eval=True,
+        style='caffe'),
+    neck=dict(
+        type='FPN',
+        in_channels=[256, 512, 1024, 2048],
+        out_channels=256,
+        start_level=1,
+        add_extra_convs=True,
+        extra_convs_on_inputs=False,
+        num_outs=5,
+        relu_before_extra_convs=True),
+    bbox_head=dict(
+        type='FCOSHead',
+        num_classes=10,
+        in_channels=256,
+        stacked_convs=4,
+        feat_channels=256,
+        strides=[8, 16, 32, 64, 128],
+        norm_cfg=None,
+        loss_cls=dict(
+            type='FocalLoss',
+            use_sigmoid=True,
+            gamma=2.0,
+            alpha=0.25,
+            loss_weight=1.0),
+        loss_bbox=dict(type='IoULoss', loss_weight=1.0),
+        loss_centerness=dict(
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0)))
+train_cfg = dict(
+    assigner=dict(
+        type='MaxIoUAssigner',
+        pos_iou_thr=0.5,
+        neg_iou_thr=0.4,
+        min_pos_iou=0,
+        ignore_iof_thr=-1),
+    allowed_border=-1,
+    pos_weight=-1,
+    debug=False)
+test_cfg = dict(
+    nms_pre=1000,
+    min_bbox_size=0,
+    score_thr=0.05,
+    nms=dict(type='nms', iou_threshold=0.5),
+    max_per_img=100)
+work_dir = './work_dirs/ifcos_moco'
+gpu_ids = range(0, 1)
+
+2020-10-16 16:41:02,590 - mmdet - INFO - load model from: https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar
+2020-10-16 16:41:27,261 - mmdet - WARNING - The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: encoder_q.conv1.weight, encoder_q.bn1.weight, encoder_q.bn1.bias, encoder_q.bn1.running_mean, encoder_q.bn1.running_var, encoder_q.bn1.num_batches_tracked, encoder_q.layer1.0.conv1.weight, encoder_q.layer1.0.bn1.weight, encoder_q.layer1.0.bn1.bias, encoder_q.layer1.0.bn1.running_mean, encoder_q.layer1.0.bn1.running_var, encoder_q.layer1.0.bn1.num_batches_tracked, encoder_q.layer1.0.conv2.weight, encoder_q.layer1.0.bn2.weight, encoder_q.layer1.0.bn2.bias, encoder_q.layer1.0.bn2.running_mean, encoder_q.layer1.0.bn2.running_var, encoder_q.layer1.0.bn2.num_batches_tracked, encoder_q.layer1.0.conv3.weight, encoder_q.layer1.0.bn3.weight, encoder_q.layer1.0.bn3.bias, encoder_q.layer1.0.bn3.running_mean, encoder_q.layer1.0.bn3.running_var, encoder_q.layer1.0.bn3.num_batches_tracked, encoder_q.layer1.0.downsample.0.weight, encoder_q.layer1.0.downsample.1.weight, encoder_q.layer1.0.downsample.1.bias, encoder_q.layer1.0.downsample.1.running_mean, encoder_q.layer1.0.downsample.1.running_var, encoder_q.layer1.0.downsample.1.num_batches_tracked, encoder_q.layer1.1.conv1.weight, encoder_q.layer1.1.bn1.weight, encoder_q.layer1.1.bn1.bias, encoder_q.layer1.1.bn1.running_mean, encoder_q.layer1.1.bn1.running_var, encoder_q.layer1.1.bn1.num_batches_tracked, encoder_q.layer1.1.conv2.weight, encoder_q.layer1.1.bn2.weight, encoder_q.layer1.1.bn2.bias, encoder_q.layer1.1.bn2.running_mean, encoder_q.layer1.1.bn2.running_var, encoder_q.layer1.1.bn2.num_batches_tracked, encoder_q.layer1.1.conv3.weight, encoder_q.layer1.1.bn3.weight, encoder_q.layer1.1.bn3.bias, encoder_q.layer1.1.bn3.running_mean, encoder_q.layer1.1.bn3.running_var, encoder_q.layer1.1.bn3.num_batches_tracked, encoder_q.layer1.2.conv1.weight, encoder_q.layer1.2.bn1.weight, encoder_q.layer1.2.bn1.bias, encoder_q.layer1.2.bn1.running_mean, encoder_q.layer1.2.bn1.running_var, encoder_q.layer1.2.bn1.num_batches_tracked, encoder_q.layer1.2.conv2.weight, encoder_q.layer1.2.bn2.weight, encoder_q.layer1.2.bn2.bias, encoder_q.layer1.2.bn2.running_mean, encoder_q.layer1.2.bn2.running_var, encoder_q.layer1.2.bn2.num_batches_tracked, encoder_q.layer1.2.conv3.weight, encoder_q.layer1.2.bn3.weight, encoder_q.layer1.2.bn3.bias, encoder_q.layer1.2.bn3.running_mean, encoder_q.layer1.2.bn3.running_var, encoder_q.layer1.2.bn3.num_batches_tracked, encoder_q.layer2.0.conv1.weight, encoder_q.layer2.0.bn1.weight, encoder_q.layer2.0.bn1.bias, encoder_q.layer2.0.bn1.running_mean, encoder_q.layer2.0.bn1.running_var, encoder_q.layer2.0.bn1.num_batches_tracked, encoder_q.layer2.0.conv2.weight, encoder_q.layer2.0.bn2.weight, encoder_q.layer2.0.bn2.bias, encoder_q.layer2.0.bn2.running_mean, encoder_q.layer2.0.bn2.running_var, encoder_q.layer2.0.bn2.num_batches_tracked, encoder_q.layer2.0.conv3.weight, encoder_q.layer2.0.bn3.weight, encoder_q.layer2.0.bn3.bias, encoder_q.layer2.0.bn3.running_mean, encoder_q.layer2.0.bn3.running_var, encoder_q.layer2.0.bn3.num_batches_tracked, encoder_q.layer2.0.downsample.0.weight, encoder_q.layer2.0.downsample.1.weight, encoder_q.layer2.0.downsample.1.bias, encoder_q.layer2.0.downsample.1.running_mean, encoder_q.layer2.0.downsample.1.running_var, encoder_q.layer2.0.downsample.1.num_batches_tracked, encoder_q.layer2.1.conv1.weight, encoder_q.layer2.1.bn1.weight, encoder_q.layer2.1.bn1.bias, encoder_q.layer2.1.bn1.running_mean, encoder_q.layer2.1.bn1.running_var, encoder_q.layer2.1.bn1.num_batches_tracked, encoder_q.layer2.1.conv2.weight, encoder_q.layer2.1.bn2.weight, encoder_q.layer2.1.bn2.bias, encoder_q.layer2.1.bn2.running_mean, encoder_q.layer2.1.bn2.running_var, encoder_q.layer2.1.bn2.num_batches_tracked, encoder_q.layer2.1.conv3.weight, encoder_q.layer2.1.bn3.weight, encoder_q.layer2.1.bn3.bias, encoder_q.layer2.1.bn3.running_mean, encoder_q.layer2.1.bn3.running_var, encoder_q.layer2.1.bn3.num_batches_tracked, encoder_q.layer2.2.conv1.weight, encoder_q.layer2.2.bn1.weight, encoder_q.layer2.2.bn1.bias, encoder_q.layer2.2.bn1.running_mean, encoder_q.layer2.2.bn1.running_var, encoder_q.layer2.2.bn1.num_batches_tracked, encoder_q.layer2.2.conv2.weight, encoder_q.layer2.2.bn2.weight, encoder_q.layer2.2.bn2.bias, encoder_q.layer2.2.bn2.running_mean, encoder_q.layer2.2.bn2.running_var, encoder_q.layer2.2.bn2.num_batches_tracked, encoder_q.layer2.2.conv3.weight, encoder_q.layer2.2.bn3.weight, encoder_q.layer2.2.bn3.bias, encoder_q.layer2.2.bn3.running_mean, encoder_q.layer2.2.bn3.running_var, encoder_q.layer2.2.bn3.num_batches_tracked, encoder_q.layer2.3.conv1.weight, encoder_q.layer2.3.bn1.weight, encoder_q.layer2.3.bn1.bias, encoder_q.layer2.3.bn1.running_mean, encoder_q.layer2.3.bn1.running_var, encoder_q.layer2.3.bn1.num_batches_tracked, encoder_q.layer2.3.conv2.weight, encoder_q.layer2.3.bn2.weight, encoder_q.layer2.3.bn2.bias, encoder_q.layer2.3.bn2.running_mean, encoder_q.layer2.3.bn2.running_var, encoder_q.layer2.3.bn2.num_batches_tracked, encoder_q.layer2.3.conv3.weight, encoder_q.layer2.3.bn3.weight, encoder_q.layer2.3.bn3.bias, encoder_q.layer2.3.bn3.running_mean, encoder_q.layer2.3.bn3.running_var, encoder_q.layer2.3.bn3.num_batches_tracked, encoder_q.layer3.0.conv1.weight, encoder_q.layer3.0.bn1.weight, encoder_q.layer3.0.bn1.bias, encoder_q.layer3.0.bn1.running_mean, encoder_q.layer3.0.bn1.running_var, encoder_q.layer3.0.bn1.num_batches_tracked, encoder_q.layer3.0.conv2.weight, encoder_q.layer3.0.bn2.weight, encoder_q.layer3.0.bn2.bias, encoder_q.layer3.0.bn2.running_mean, encoder_q.layer3.0.bn2.running_var, encoder_q.layer3.0.bn2.num_batches_tracked, encoder_q.layer3.0.conv3.weight, encoder_q.layer3.0.bn3.weight, encoder_q.layer3.0.bn3.bias, encoder_q.layer3.0.bn3.running_mean, encoder_q.layer3.0.bn3.running_var, encoder_q.layer3.0.bn3.num_batches_tracked, encoder_q.layer3.0.downsample.0.weight, encoder_q.layer3.0.downsample.1.weight, encoder_q.layer3.0.downsample.1.bias, encoder_q.layer3.0.downsample.1.running_mean, encoder_q.layer3.0.downsample.1.running_var, encoder_q.layer3.0.downsample.1.num_batches_tracked, encoder_q.layer3.1.conv1.weight, encoder_q.layer3.1.bn1.weight, encoder_q.layer3.1.bn1.bias, encoder_q.layer3.1.bn1.running_mean, encoder_q.layer3.1.bn1.running_var, encoder_q.layer3.1.bn1.num_batches_tracked, encoder_q.layer3.1.conv2.weight, encoder_q.layer3.1.bn2.weight, encoder_q.layer3.1.bn2.bias, encoder_q.layer3.1.bn2.running_mean, encoder_q.layer3.1.bn2.running_var, encoder_q.layer3.1.bn2.num_batches_tracked, encoder_q.layer3.1.conv3.weight, encoder_q.layer3.1.bn3.weight, encoder_q.layer3.1.bn3.bias, encoder_q.layer3.1.bn3.running_mean, encoder_q.layer3.1.bn3.running_var, encoder_q.layer3.1.bn3.num_batches_tracked, encoder_q.layer3.2.conv1.weight, encoder_q.layer3.2.bn1.weight, encoder_q.layer3.2.bn1.bias, encoder_q.layer3.2.bn1.running_mean, encoder_q.layer3.2.bn1.running_var, encoder_q.layer3.2.bn1.num_batches_tracked, encoder_q.layer3.2.conv2.weight, encoder_q.layer3.2.bn2.weight, encoder_q.layer3.2.bn2.bias, encoder_q.layer3.2.bn2.running_mean, encoder_q.layer3.2.bn2.running_var, encoder_q.layer3.2.bn2.num_batches_tracked, encoder_q.layer3.2.conv3.weight, encoder_q.layer3.2.bn3.weight, encoder_q.layer3.2.bn3.bias, encoder_q.layer3.2.bn3.running_mean, encoder_q.layer3.2.bn3.running_var, encoder_q.layer3.2.bn3.num_batches_tracked, encoder_q.layer3.3.conv1.weight, encoder_q.layer3.3.bn1.weight, encoder_q.layer3.3.bn1.bias, encoder_q.layer3.3.bn1.running_mean, encoder_q.layer3.3.bn1.running_var, encoder_q.layer3.3.bn1.num_batches_tracked, encoder_q.layer3.3.conv2.weight, encoder_q.layer3.3.bn2.weight, encoder_q.layer3.3.bn2.bias, encoder_q.layer3.3.bn2.running_mean, encoder_q.layer3.3.bn2.running_var, encoder_q.layer3.3.bn2.num_batches_tracked, encoder_q.layer3.3.conv3.weight, encoder_q.layer3.3.bn3.weight, encoder_q.layer3.3.bn3.bias, encoder_q.layer3.3.bn3.running_mean, encoder_q.layer3.3.bn3.running_var, encoder_q.layer3.3.bn3.num_batches_tracked, encoder_q.layer3.4.conv1.weight, encoder_q.layer3.4.bn1.weight, encoder_q.layer3.4.bn1.bias, encoder_q.layer3.4.bn1.running_mean, encoder_q.layer3.4.bn1.running_var, encoder_q.layer3.4.bn1.num_batches_tracked, encoder_q.layer3.4.conv2.weight, encoder_q.layer3.4.bn2.weight, encoder_q.layer3.4.bn2.bias, encoder_q.layer3.4.bn2.running_mean, encoder_q.layer3.4.bn2.running_var, encoder_q.layer3.4.bn2.num_batches_tracked, encoder_q.layer3.4.conv3.weight, encoder_q.layer3.4.bn3.weight, encoder_q.layer3.4.bn3.bias, encoder_q.layer3.4.bn3.running_mean, encoder_q.layer3.4.bn3.running_var, encoder_q.layer3.4.bn3.num_batches_tracked, encoder_q.layer3.5.conv1.weight, encoder_q.layer3.5.bn1.weight, encoder_q.layer3.5.bn1.bias, encoder_q.layer3.5.bn1.running_mean, encoder_q.layer3.5.bn1.running_var, encoder_q.layer3.5.bn1.num_batches_tracked, encoder_q.layer3.5.conv2.weight, encoder_q.layer3.5.bn2.weight, encoder_q.layer3.5.bn2.bias, encoder_q.layer3.5.bn2.running_mean, encoder_q.layer3.5.bn2.running_var, encoder_q.layer3.5.bn2.num_batches_tracked, encoder_q.layer3.5.conv3.weight, encoder_q.layer3.5.bn3.weight, encoder_q.layer3.5.bn3.bias, encoder_q.layer3.5.bn3.running_mean, encoder_q.layer3.5.bn3.running_var, encoder_q.layer3.5.bn3.num_batches_tracked, encoder_q.layer4.0.conv1.weight, encoder_q.layer4.0.bn1.weight, encoder_q.layer4.0.bn1.bias, encoder_q.layer4.0.bn1.running_mean, encoder_q.layer4.0.bn1.running_var, encoder_q.layer4.0.bn1.num_batches_tracked, encoder_q.layer4.0.conv2.weight, encoder_q.layer4.0.bn2.weight, encoder_q.layer4.0.bn2.bias, encoder_q.layer4.0.bn2.running_mean, encoder_q.layer4.0.bn2.running_var, encoder_q.layer4.0.bn2.num_batches_tracked, encoder_q.layer4.0.conv3.weight, encoder_q.layer4.0.bn3.weight, encoder_q.layer4.0.bn3.bias, encoder_q.layer4.0.bn3.running_mean, encoder_q.layer4.0.bn3.running_var, encoder_q.layer4.0.bn3.num_batches_tracked, encoder_q.layer4.0.downsample.0.weight, encoder_q.layer4.0.downsample.1.weight, encoder_q.layer4.0.downsample.1.bias, encoder_q.layer4.0.downsample.1.running_mean, encoder_q.layer4.0.downsample.1.running_var, encoder_q.layer4.0.downsample.1.num_batches_tracked, encoder_q.layer4.1.conv1.weight, encoder_q.layer4.1.bn1.weight, encoder_q.layer4.1.bn1.bias, encoder_q.layer4.1.bn1.running_mean, encoder_q.layer4.1.bn1.running_var, encoder_q.layer4.1.bn1.num_batches_tracked, encoder_q.layer4.1.conv2.weight, encoder_q.layer4.1.bn2.weight, encoder_q.layer4.1.bn2.bias, encoder_q.layer4.1.bn2.running_mean, encoder_q.layer4.1.bn2.running_var, encoder_q.layer4.1.bn2.num_batches_tracked, encoder_q.layer4.1.conv3.weight, encoder_q.layer4.1.bn3.weight, encoder_q.layer4.1.bn3.bias, encoder_q.layer4.1.bn3.running_mean, encoder_q.layer4.1.bn3.running_var, encoder_q.layer4.1.bn3.num_batches_tracked, encoder_q.layer4.2.conv1.weight, encoder_q.layer4.2.bn1.weight, encoder_q.layer4.2.bn1.bias, encoder_q.layer4.2.bn1.running_mean, encoder_q.layer4.2.bn1.running_var, encoder_q.layer4.2.bn1.num_batches_tracked, encoder_q.layer4.2.conv2.weight, encoder_q.layer4.2.bn2.weight, encoder_q.layer4.2.bn2.bias, encoder_q.layer4.2.bn2.running_mean, encoder_q.layer4.2.bn2.running_var, encoder_q.layer4.2.bn2.num_batches_tracked, encoder_q.layer4.2.conv3.weight, encoder_q.layer4.2.bn3.weight, encoder_q.layer4.2.bn3.bias, encoder_q.layer4.2.bn3.running_mean, encoder_q.layer4.2.bn3.running_var, encoder_q.layer4.2.bn3.num_batches_tracked, encoder_q.fc.0.weight, encoder_q.fc.0.bias, encoder_q.fc.2.weight, encoder_q.fc.2.bias
+
+missing keys in source state_dict: conv1.weight, bn1.weight, bn1.bias, bn1.running_mean, bn1.running_var, layer1.0.conv1.weight, layer1.0.bn1.weight, layer1.0.bn1.bias, layer1.0.bn1.running_mean, layer1.0.bn1.running_var, layer1.0.conv2.weight, layer1.0.bn2.weight, layer1.0.bn2.bias, layer1.0.bn2.running_mean, layer1.0.bn2.running_var, layer1.0.conv3.weight, layer1.0.bn3.weight, layer1.0.bn3.bias, layer1.0.bn3.running_mean, layer1.0.bn3.running_var, layer1.0.downsample.0.weight, layer1.0.downsample.1.weight, layer1.0.downsample.1.bias, layer1.0.downsample.1.running_mean, layer1.0.downsample.1.running_var, layer1.1.conv1.weight, layer1.1.bn1.weight, layer1.1.bn1.bias, layer1.1.bn1.running_mean, layer1.1.bn1.running_var, layer1.1.conv2.weight, layer1.1.bn2.weight, layer1.1.bn2.bias, layer1.1.bn2.running_mean, layer1.1.bn2.running_var, layer1.1.conv3.weight, layer1.1.bn3.weight, layer1.1.bn3.bias, layer1.1.bn3.running_mean, layer1.1.bn3.running_var, layer1.2.conv1.weight, layer1.2.bn1.weight, layer1.2.bn1.bias, layer1.2.bn1.running_mean, layer1.2.bn1.running_var, layer1.2.conv2.weight, layer1.2.bn2.weight, layer1.2.bn2.bias, layer1.2.bn2.running_mean, layer1.2.bn2.running_var, layer1.2.conv3.weight, layer1.2.bn3.weight, layer1.2.bn3.bias, layer1.2.bn3.running_mean, layer1.2.bn3.running_var, layer2.0.conv1.weight, layer2.0.bn1.weight, layer2.0.bn1.bias, layer2.0.bn1.running_mean, layer2.0.bn1.running_var, layer2.0.conv2.weight, layer2.0.bn2.weight, layer2.0.bn2.bias, layer2.0.bn2.running_mean, layer2.0.bn2.running_var, layer2.0.conv3.weight, layer2.0.bn3.weight, layer2.0.bn3.bias, layer2.0.bn3.running_mean, layer2.0.bn3.running_var, layer2.0.downsample.0.weight, layer2.0.downsample.1.weight, layer2.0.downsample.1.bias, layer2.0.downsample.1.running_mean, layer2.0.downsample.1.running_var, layer2.1.conv1.weight, layer2.1.bn1.weight, layer2.1.bn1.bias, layer2.1.bn1.running_mean, layer2.1.bn1.running_var, layer2.1.conv2.weight, layer2.1.bn2.weight, layer2.1.bn2.bias, layer2.1.bn2.running_mean, layer2.1.bn2.running_var, layer2.1.conv3.weight, layer2.1.bn3.weight, layer2.1.bn3.bias, layer2.1.bn3.running_mean, layer2.1.bn3.running_var, layer2.2.conv1.weight, layer2.2.bn1.weight, layer2.2.bn1.bias, layer2.2.bn1.running_mean, layer2.2.bn1.running_var, layer2.2.conv2.weight, layer2.2.bn2.weight, layer2.2.bn2.bias, layer2.2.bn2.running_mean, layer2.2.bn2.running_var, layer2.2.conv3.weight, layer2.2.bn3.weight, layer2.2.bn3.bias, layer2.2.bn3.running_mean, layer2.2.bn3.running_var, layer2.3.conv1.weight, layer2.3.bn1.weight, layer2.3.bn1.bias, layer2.3.bn1.running_mean, layer2.3.bn1.running_var, layer2.3.conv2.weight, layer2.3.bn2.weight, layer2.3.bn2.bias, layer2.3.bn2.running_mean, layer2.3.bn2.running_var, layer2.3.conv3.weight, layer2.3.bn3.weight, layer2.3.bn3.bias, layer2.3.bn3.running_mean, layer2.3.bn3.running_var, layer3.0.conv1.weight, layer3.0.bn1.weight, layer3.0.bn1.bias, layer3.0.bn1.running_mean, layer3.0.bn1.running_var, layer3.0.conv2.weight, layer3.0.bn2.weight, layer3.0.bn2.bias, layer3.0.bn2.running_mean, layer3.0.bn2.running_var, layer3.0.conv3.weight, layer3.0.bn3.weight, layer3.0.bn3.bias, layer3.0.bn3.running_mean, layer3.0.bn3.running_var, layer3.0.downsample.0.weight, layer3.0.downsample.1.weight, layer3.0.downsample.1.bias, layer3.0.downsample.1.running_mean, layer3.0.downsample.1.running_var, layer3.1.conv1.weight, layer3.1.bn1.weight, layer3.1.bn1.bias, layer3.1.bn1.running_mean, layer3.1.bn1.running_var, layer3.1.conv2.weight, layer3.1.bn2.weight, layer3.1.bn2.bias, layer3.1.bn2.running_mean, layer3.1.bn2.running_var, layer3.1.conv3.weight, layer3.1.bn3.weight, layer3.1.bn3.bias, layer3.1.bn3.running_mean, layer3.1.bn3.running_var, layer3.2.conv1.weight, layer3.2.bn1.weight, layer3.2.bn1.bias, layer3.2.bn1.running_mean, layer3.2.bn1.running_var, layer3.2.conv2.weight, layer3.2.bn2.weight, layer3.2.bn2.bias, layer3.2.bn2.running_mean, layer3.2.bn2.running_var, layer3.2.conv3.weight, layer3.2.bn3.weight, layer3.2.bn3.bias, layer3.2.bn3.running_mean, layer3.2.bn3.running_var, layer3.3.conv1.weight, layer3.3.bn1.weight, layer3.3.bn1.bias, layer3.3.bn1.running_mean, layer3.3.bn1.running_var, layer3.3.conv2.weight, layer3.3.bn2.weight, layer3.3.bn2.bias, layer3.3.bn2.running_mean, layer3.3.bn2.running_var, layer3.3.conv3.weight, layer3.3.bn3.weight, layer3.3.bn3.bias, layer3.3.bn3.running_mean, layer3.3.bn3.running_var, layer3.4.conv1.weight, layer3.4.bn1.weight, layer3.4.bn1.bias, layer3.4.bn1.running_mean, layer3.4.bn1.running_var, layer3.4.conv2.weight, layer3.4.bn2.weight, layer3.4.bn2.bias, layer3.4.bn2.running_mean, layer3.4.bn2.running_var, layer3.4.conv3.weight, layer3.4.bn3.weight, layer3.4.bn3.bias, layer3.4.bn3.running_mean, layer3.4.bn3.running_var, layer3.5.conv1.weight, layer3.5.bn1.weight, layer3.5.bn1.bias, layer3.5.bn1.running_mean, layer3.5.bn1.running_var, layer3.5.conv2.weight, layer3.5.bn2.weight, layer3.5.bn2.bias, layer3.5.bn2.running_mean, layer3.5.bn2.running_var, layer3.5.conv3.weight, layer3.5.bn3.weight, layer3.5.bn3.bias, layer3.5.bn3.running_mean, layer3.5.bn3.running_var, layer4.0.conv1.weight, layer4.0.bn1.weight, layer4.0.bn1.bias, layer4.0.bn1.running_mean, layer4.0.bn1.running_var, layer4.0.conv2.weight, layer4.0.bn2.weight, layer4.0.bn2.bias, layer4.0.bn2.running_mean, layer4.0.bn2.running_var, layer4.0.conv3.weight, layer4.0.bn3.weight, layer4.0.bn3.bias, layer4.0.bn3.running_mean, layer4.0.bn3.running_var, layer4.0.downsample.0.weight, layer4.0.downsample.1.weight, layer4.0.downsample.1.bias, layer4.0.downsample.1.running_mean, layer4.0.downsample.1.running_var, layer4.1.conv1.weight, layer4.1.bn1.weight, layer4.1.bn1.bias, layer4.1.bn1.running_mean, layer4.1.bn1.running_var, layer4.1.conv2.weight, layer4.1.bn2.weight, layer4.1.bn2.bias, layer4.1.bn2.running_mean, layer4.1.bn2.running_var, layer4.1.conv3.weight, layer4.1.bn3.weight, layer4.1.bn3.bias, layer4.1.bn3.running_mean, layer4.1.bn3.running_var, layer4.2.conv1.weight, layer4.2.bn1.weight, layer4.2.bn1.bias, layer4.2.bn1.running_mean, layer4.2.bn1.running_var, layer4.2.conv2.weight, layer4.2.bn2.weight, layer4.2.bn2.bias, layer4.2.bn2.running_mean, layer4.2.bn2.running_var, layer4.2.conv3.weight, layer4.2.bn3.weight, layer4.2.bn3.bias, layer4.2.bn3.running_mean, layer4.2.bn3.running_var
+
+2020-10-16 16:41:30,668 - mmdet - INFO - Start running, host: root@c29bb9d22aa7, work_dir: /root/userfolder/mmdetection/work_dirs/ifcos_moco
+2020-10-16 16:41:30,668 - mmdet - INFO - workflow: [('train', 1)], max: 12 epochs
+2020-10-16 16:43:02,410 - mmdet - INFO - Epoch [1][50/1875]	lr: 3.333e-04, eta: 11:26:29, time: 1.835, data_time: 1.185, memory: 4893, loss_cls: 1.0307, loss_bbox: 3.5539, loss_centerness: 0.6713, loss: 5.2559, grad_norm: 48.1131
+2020-10-16 16:44:29,396 - mmdet - INFO - Epoch [1][100/1875]	lr: 3.333e-04, eta: 11:07:13, time: 1.740, data_time: 1.119, memory: 4893, loss_cls: 0.8223, loss_bbox: 1.8467, loss_centerness: 0.6582, loss: 3.3272, grad_norm: 42.9272
+2020-10-16 16:45:56,202 - mmdet - INFO - Epoch [1][150/1875]	lr: 3.333e-04, eta: 10:59:23, time: 1.736, data_time: 1.100, memory: 4894, loss_cls: 0.7826, loss_bbox: 1.5452, loss_centerness: 0.6573, loss: 2.9851, grad_norm: 31.0474
+2020-10-16 16:47:21,973 - mmdet - INFO - Epoch [1][200/1875]	lr: 3.333e-04, eta: 10:52:49, time: 1.715, data_time: 1.088, memory: 4894, loss_cls: 0.7885, loss_bbox: 1.5389, loss_centerness: 0.6561, loss: 2.9835, grad_norm: 38.0864
+2020-10-16 16:48:48,057 - mmdet - INFO - Epoch [1][250/1875]	lr: 3.333e-04, eta: 10:48:46, time: 1.722, data_time: 1.091, memory: 4894, loss_cls: 0.7516, loss_bbox: 1.2957, loss_centerness: 0.6536, loss: 2.7009, grad_norm: 21.9459
+2020-10-16 16:50:14,731 - mmdet - INFO - Epoch [1][300/1875]	lr: 3.333e-04, eta: 10:46:20, time: 1.734, data_time: 1.120, memory: 4894, loss_cls: 0.7602, loss_bbox: 1.3797, loss_centerness: 0.6500, loss: 2.7900, grad_norm: 34.9822
+2020-10-16 16:51:42,951 - mmdet - INFO - Epoch [1][350/1875]	lr: 3.333e-04, eta: 10:45:47, time: 1.764, data_time: 1.126, memory: 4894, loss_cls: 0.7427, loss_bbox: 1.3622, loss_centerness: 0.6480, loss: 2.7528, grad_norm: 32.2728
+2020-10-16 16:52:52,681 - mmdet - INFO - Epoch [1][400/1875]	lr: 3.333e-04, eta: 10:28:00, time: 1.395, data_time: 0.819, memory: 4894, loss_cls: 0.7526, loss_bbox: 1.5147, loss_centerness: 0.6454, loss: 2.9127, grad_norm: 36.3572

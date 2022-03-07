@@ -1,0 +1,483 @@
+2020-10-23 11:05:34,172 - mmdet - INFO - Environment info:
+------------------------------------------------------------
+sys.platform: linux
+Python: 3.7.9 (default, Aug 31 2020, 12:42:55) [GCC 7.3.0]
+CUDA available: True
+GPU 0,1,2,3: GeForce RTX 2080 Ti
+CUDA_HOME: /usr/local/cuda
+NVCC: Cuda compilation tools, release 10.0, V10.0.130
+GCC: gcc (Ubuntu 5.4.0-6ubuntu1~16.04.11) 5.4.0 20160609
+PyTorch: 1.4.0
+PyTorch compiling details: PyTorch built with:
+  - GCC 7.3
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v0.21.1 (Git Hash 7d2fd500bc78936d1d648ca713b901012f470dbc)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CUDA Runtime 10.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 7.6.3
+  - Magma 2.5.1
+  - Build settings: BLAS=MKL, BUILD_NAMEDTENSOR=OFF, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -fopenmp -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -O2 -fPIC -Wno-narrowing -Wall -Wextra -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Wno-stringop-overflow, DISABLE_NUMA=1, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_STATIC_DISPATCH=OFF, 
+
+TorchVision: 0.5.0
+OpenCV: 4.4.0
+MMCV: 1.1.5
+MMCV Compiler: GCC 7.3
+MMCV CUDA Compiler: 10.0
+MMDetection: 2.5.0+
+------------------------------------------------------------
+
+2020-10-23 11:05:34,580 - mmdet - INFO - Distributed training: True
+2020-10-23 11:05:35,079 - mmdet - INFO - Config:
+dataset_type = 'CocoDataset'
+data_root = 'data/coco/'
+annotations_root = 'annotations/'
+image_root = '/root/userfolder/data/TCTAnnotatedData/'
+classes = ('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+           'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+           'dysbacteriosis_herpes_act', 'ec')
+img_norm_cfg = dict(
+    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
+train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(
+        type='Resize',
+        img_scale=[(1333, 640), (1333, 800)],
+        multiscale_mode='value',
+        keep_ratio=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='Normalize',
+        mean=[102.9801, 115.9465, 122.7717],
+        std=[1.0, 1.0, 1.0],
+        to_rgb=False),
+    dict(type='Pad', size_divisor=32),
+    dict(type='DefaultFormatBundle'),
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(1333, 800),
+        flip=False,
+        transforms=[
+            dict(type='Resize', keep_ratio=True),
+            dict(type='RandomFlip'),
+            dict(
+                type='Normalize',
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
+            dict(type='Pad', size_divisor=32),
+            dict(type='ImageToTensor', keys=['img']),
+            dict(type='Collect', keys=['img'])
+        ])
+]
+data = dict(
+    samples_per_gpu=4,
+    workers_per_gpu=0,
+    train=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/train30000-cat10.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(
+                type='Resize',
+                img_scale=[(1333, 640), (1333, 800)],
+                multiscale_mode='value',
+                keep_ratio=True),
+            dict(type='RandomFlip', flip_ratio=0.5),
+            dict(
+                type='Normalize',
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
+            dict(type='Pad', size_divisor=32),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+        ]),
+    val=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/val10000-cat10.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1333, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]),
+    test=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/test10000-cat10.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1333, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]))
+evaluation = dict(interval=1, metric='bbox')
+optimizer = dict(
+    type='SGD',
+    lr=0.01,
+    momentum=0.9,
+    weight_decay=0.0001,
+    paramwise_cfg=dict(bias_lr_mult=2.0, bias_decay_mult=0.0))
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+lr_config = dict(
+    policy='step',
+    warmup='constant',
+    warmup_iters=500,
+    warmup_ratio=0.3333333333333333,
+    step=[16, 22])
+total_epochs = 24
+checkpoint_config = dict(interval=1)
+log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
+dist_params = dict(backend='nccl')
+log_level = 'INFO'
+load_from = None
+resume_from = None
+workflow = [('train', 1)]
+model = dict(
+    type='FCOS',
+    pretrained='icode/moco_v2_800ep_pretrain_rename.pth',
+    backbone=dict(
+        type='ResNet',
+        depth=50,
+        num_stages=4,
+        out_indices=(0, 1, 2, 3),
+        frozen_stages=1,
+        norm_cfg=dict(type='BN', requires_grad=False),
+        norm_eval=True,
+        style='caffe'),
+    neck=dict(
+        type='FPN',
+        in_channels=[256, 512, 1024, 2048],
+        out_channels=256,
+        start_level=1,
+        add_extra_convs=True,
+        extra_convs_on_inputs=False,
+        num_outs=5,
+        relu_before_extra_convs=True),
+    bbox_head=dict(
+        type='FCOSHead',
+        num_classes=10,
+        in_channels=256,
+        stacked_convs=4,
+        feat_channels=256,
+        strides=[8, 16, 32, 64, 128],
+        loss_cls=dict(
+            type='FocalLoss',
+            use_sigmoid=True,
+            gamma=2.0,
+            alpha=0.25,
+            loss_weight=1.0),
+        loss_bbox=dict(type='IoULoss', loss_weight=1.0),
+        loss_centerness=dict(
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0)))
+train_cfg = dict(
+    assigner=dict(
+        type='MaxIoUAssigner',
+        pos_iou_thr=0.5,
+        neg_iou_thr=0.4,
+        min_pos_iou=0,
+        ignore_iof_thr=-1),
+    allowed_border=-1,
+    pos_weight=-1,
+    debug=False)
+test_cfg = dict(
+    nms_pre=1000,
+    min_bbox_size=0,
+    score_thr=0.05,
+    nms=dict(type='nms', iou_threshold=0.5),
+    max_per_img=100)
+work_dir = './work_dirs/fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco'
+gpu_ids = range(0, 1)
+
+2020-10-23 11:05:35,428 - mmdet - INFO - load model from: icode/moco_v2_800ep_pretrain_rename.pth
+2020-10-23 11:05:35,553 - mmdet - WARNING - The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: fc.0.weight, fc.0.bias, fc.2.weight, fc.2.bias
+
+2020-10-23 11:05:48,367 - mmdet - INFO - Start running, host: root@c29bb9d22aa7, work_dir: /root/userfolder/mmdetection/work_dirs/fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco
+2020-10-23 11:05:48,367 - mmdet - INFO - workflow: [('train', 1)], max: 24 epochs
+2020-10-23 11:07:04,426 - mmdet - INFO - Epoch [1][50/1875]	lr: 3.333e-03, eta: 18:59:32, time: 1.521, data_time: 0.875, memory: 6007, loss_cls: 0.8680, loss_bbox: 1.3753, loss_centerness: 0.6558, loss: 2.8991, grad_norm: 19.9060
+2020-10-23 11:08:13,012 - mmdet - INFO - Epoch [1][100/1875]	lr: 3.333e-03, eta: 18:02:23, time: 1.372, data_time: 0.860, memory: 6007, loss_cls: 0.7965, loss_bbox: 0.9387, loss_centerness: 0.6537, loss: 2.3888, grad_norm: 7.2627
+2020-10-23 11:09:22,223 - mmdet - INFO - Epoch [1][150/1875]	lr: 3.333e-03, eta: 17:45:41, time: 1.384, data_time: 0.826, memory: 6016, loss_cls: 0.7736, loss_bbox: 0.9155, loss_centerness: 0.6538, loss: 2.3430, grad_norm: 5.2776
+2020-10-23 11:10:31,397 - mmdet - INFO - Epoch [1][200/1875]	lr: 3.333e-03, eta: 17:36:37, time: 1.383, data_time: 0.840, memory: 6016, loss_cls: 0.7750, loss_bbox: 0.9290, loss_centerness: 0.6548, loss: 2.3588, grad_norm: 4.8431
+2020-10-23 11:11:39,869 - mmdet - INFO - Epoch [1][250/1875]	lr: 3.333e-03, eta: 17:28:37, time: 1.369, data_time: 0.845, memory: 6016, loss_cls: 0.7440, loss_bbox: 0.8898, loss_centerness: 0.6547, loss: 2.2884, grad_norm: 3.5261
+2020-10-23 11:12:49,464 - mmdet - INFO - Epoch [1][300/1875]	lr: 3.333e-03, eta: 17:25:42, time: 1.392, data_time: 0.865, memory: 6016, loss_cls: 0.7466, loss_bbox: 0.9143, loss_centerness: 0.6533, loss: 2.3141, grad_norm: 4.4495
+2020-10-23 11:13:58,619 - mmdet - INFO - Epoch [1][350/1875]	lr: 3.333e-03, eta: 17:22:21, time: 1.383, data_time: 0.854, memory: 6016, loss_cls: 0.7582, loss_bbox: 0.8820, loss_centerness: 0.6542, loss: 2.2945, grad_norm: 3.5702
+2020-10-23 11:15:07,138 - mmdet - INFO - Epoch [1][400/1875]	lr: 3.333e-03, eta: 17:18:22, time: 1.370, data_time: 0.836, memory: 6016, loss_cls: 0.7537, loss_bbox: 0.8923, loss_centerness: 0.6544, loss: 2.3004, grad_norm: 3.2764
+2020-10-23 11:16:16,573 - mmdet - INFO - Epoch [1][450/1875]	lr: 3.333e-03, eta: 17:16:31, time: 1.389, data_time: 0.822, memory: 6016, loss_cls: 0.7471, loss_bbox: 0.9053, loss_centerness: 0.6531, loss: 2.3055, grad_norm: 4.1863
+2020-10-23 11:17:26,244 - mmdet - INFO - Epoch [1][500/1875]	lr: 3.333e-03, eta: 17:15:10, time: 1.393, data_time: 0.832, memory: 6016, loss_cls: 0.7609, loss_bbox: 0.8894, loss_centerness: 0.6528, loss: 2.3031, grad_norm: 3.0660
+2020-10-23 11:18:35,063 - mmdet - INFO - Epoch [1][550/1875]	lr: 1.000e-02, eta: 17:12:42, time: 1.376, data_time: 0.852, memory: 6016, loss_cls: 0.7765, loss_bbox: 0.9734, loss_centerness: 0.6548, loss: 2.4047, grad_norm: 6.1627
+2020-10-23 11:19:44,907 - mmdet - INFO - Epoch [1][600/1875]	lr: 1.000e-02, eta: 17:11:43, time: 1.397, data_time: 0.846, memory: 6016, loss_cls: 0.7511, loss_bbox: 0.9656, loss_centerness: 0.6537, loss: 2.3704, grad_norm: 5.1436
+2020-10-23 11:20:54,356 - mmdet - INFO - Epoch [1][650/1875]	lr: 1.000e-02, eta: 17:10:15, time: 1.389, data_time: 0.851, memory: 6016, loss_cls: 0.7687, loss_bbox: 0.9993, loss_centerness: 0.6549, loss: 2.4229, grad_norm: 6.2033
+2020-10-23 11:22:03,060 - mmdet - INFO - Epoch [1][700/1875]	lr: 1.000e-02, eta: 17:08:03, time: 1.374, data_time: 0.833, memory: 6016, loss_cls: 0.7261, loss_bbox: 0.9713, loss_centerness: 0.6555, loss: 2.3529, grad_norm: 6.2035
+2020-10-23 11:23:12,359 - mmdet - INFO - Epoch [1][750/1875]	lr: 1.000e-02, eta: 17:06:35, time: 1.386, data_time: 0.838, memory: 6016, loss_cls: 0.7248, loss_bbox: 0.9297, loss_centerness: 0.6526, loss: 2.3072, grad_norm: 6.2622
+2020-10-23 11:24:22,176 - mmdet - INFO - Epoch [1][800/1875]	lr: 1.000e-02, eta: 17:05:37, time: 1.396, data_time: 0.849, memory: 6016, loss_cls: 0.7193, loss_bbox: 0.9414, loss_centerness: 0.6498, loss: 2.3105, grad_norm: 6.2093
+2020-10-23 11:25:31,777 - mmdet - INFO - Epoch [1][850/1875]	lr: 1.000e-02, eta: 17:04:27, time: 1.392, data_time: 0.848, memory: 6016, loss_cls: 0.7093, loss_bbox: 0.8475, loss_centerness: 0.6466, loss: 2.2035, grad_norm: 5.1528
+2020-10-23 11:26:40,688 - mmdet - INFO - Epoch [1][900/1875]	lr: 1.000e-02, eta: 17:02:43, time: 1.378, data_time: 0.858, memory: 6016, loss_cls: 0.7028, loss_bbox: 0.8996, loss_centerness: 0.6427, loss: 2.2452, grad_norm: 5.9195
+2020-10-23 11:27:49,381 - mmdet - INFO - Epoch [1][950/1875]	lr: 1.000e-02, eta: 17:00:52, time: 1.374, data_time: 0.845, memory: 6016, loss_cls: 0.6729, loss_bbox: 0.8883, loss_centerness: 0.6398, loss: 2.2010, grad_norm: 6.2675
+2020-10-23 11:28:58,662 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 11:28:58,662 - mmdet - INFO - Epoch [1][1000/1875]	lr: 1.000e-02, eta: 16:59:32, time: 1.386, data_time: 0.855, memory: 6016, loss_cls: 0.6530, loss_bbox: 0.8701, loss_centerness: 0.6329, loss: 2.1559, grad_norm: 6.6080
+2020-10-23 11:30:08,117 - mmdet - INFO - Epoch [1][1050/1875]	lr: 1.000e-02, eta: 16:58:20, time: 1.389, data_time: 0.863, memory: 6016, loss_cls: 0.6589, loss_bbox: 0.8296, loss_centerness: 0.6313, loss: 2.1198, grad_norm: 5.9307
+2020-10-23 11:31:17,158 - mmdet - INFO - Epoch [1][1100/1875]	lr: 1.000e-02, eta: 16:56:52, time: 1.381, data_time: 0.847, memory: 6016, loss_cls: 0.6643, loss_bbox: 0.7959, loss_centerness: 0.6308, loss: 2.0911, grad_norm: 5.2217
+2020-10-23 11:32:26,400 - mmdet - INFO - Epoch [1][1150/1875]	lr: 1.000e-02, eta: 16:55:33, time: 1.385, data_time: 0.838, memory: 6016, loss_cls: 0.6471, loss_bbox: 0.8219, loss_centerness: 0.6307, loss: 2.0997, grad_norm: 5.5453
+2020-10-23 11:33:35,294 - mmdet - INFO - Epoch [1][1200/1875]	lr: 1.000e-02, eta: 16:54:02, time: 1.378, data_time: 0.846, memory: 6018, loss_cls: 0.6469, loss_bbox: 0.7858, loss_centerness: 0.6301, loss: 2.0629, grad_norm: 5.3188
+2020-10-23 11:34:43,480 - mmdet - INFO - Epoch [1][1250/1875]	lr: 1.000e-02, eta: 16:52:08, time: 1.364, data_time: 0.825, memory: 6018, loss_cls: 0.6396, loss_bbox: 0.7785, loss_centerness: 0.6308, loss: 2.0488, grad_norm: 5.1344
+2020-10-23 11:35:52,989 - mmdet - INFO - Epoch [1][1300/1875]	lr: 1.000e-02, eta: 16:51:02, time: 1.390, data_time: 0.839, memory: 6018, loss_cls: 0.6296, loss_bbox: 0.7725, loss_centerness: 0.6282, loss: 2.0304, grad_norm: 5.4380
+2020-10-23 11:37:01,932 - mmdet - INFO - Epoch [1][1350/1875]	lr: 1.000e-02, eta: 16:49:38, time: 1.379, data_time: 0.834, memory: 6018, loss_cls: 0.6435, loss_bbox: 0.7824, loss_centerness: 0.6308, loss: 2.0567, grad_norm: 5.5170
+2020-10-23 11:38:11,264 - mmdet - INFO - Epoch [1][1400/1875]	lr: 1.000e-02, eta: 16:48:27, time: 1.387, data_time: 0.841, memory: 6018, loss_cls: 0.6353, loss_bbox: 0.7358, loss_centerness: 0.6274, loss: 1.9985, grad_norm: 4.5480
+2020-10-23 11:39:20,859 - mmdet - INFO - Epoch [1][1450/1875]	lr: 1.000e-02, eta: 16:47:23, time: 1.392, data_time: 0.849, memory: 6018, loss_cls: 0.6314, loss_bbox: 0.7752, loss_centerness: 0.6259, loss: 2.0325, grad_norm: 5.1972
+2020-10-23 11:40:32,673 - mmdet - INFO - Epoch [1][1500/1875]	lr: 1.000e-02, eta: 16:47:24, time: 1.436, data_time: 0.874, memory: 6018, loss_cls: 0.6294, loss_bbox: 0.8120, loss_centerness: 0.6279, loss: 2.0692, grad_norm: 5.7525
+2020-10-23 11:41:43,541 - mmdet - INFO - Epoch [1][1550/1875]	lr: 1.000e-02, eta: 16:46:54, time: 1.417, data_time: 0.861, memory: 6018, loss_cls: 0.6254, loss_bbox: 0.7558, loss_centerness: 0.6266, loss: 2.0078, grad_norm: 5.0213
+2020-10-23 11:42:55,676 - mmdet - INFO - Epoch [1][1600/1875]	lr: 1.000e-02, eta: 16:46:55, time: 1.443, data_time: 0.885, memory: 6018, loss_cls: 0.6224, loss_bbox: 0.7156, loss_centerness: 0.6267, loss: 1.9647, grad_norm: 4.5846
+2020-10-23 11:44:09,519 - mmdet - INFO - Epoch [1][1650/1875]	lr: 1.000e-02, eta: 16:47:37, time: 1.477, data_time: 0.878, memory: 6018, loss_cls: 0.6204, loss_bbox: 0.7483, loss_centerness: 0.6258, loss: 1.9944, grad_norm: 4.9890
+2020-10-23 11:45:22,213 - mmdet - INFO - Epoch [1][1700/1875]	lr: 1.000e-02, eta: 16:47:42, time: 1.454, data_time: 0.926, memory: 6018, loss_cls: 0.6112, loss_bbox: 0.7364, loss_centerness: 0.6225, loss: 1.9702, grad_norm: 4.7409
+2020-10-23 11:46:33,821 - mmdet - INFO - Epoch [1][1750/1875]	lr: 1.000e-02, eta: 16:47:17, time: 1.432, data_time: 0.898, memory: 6018, loss_cls: 0.6106, loss_bbox: 0.7256, loss_centerness: 0.6218, loss: 1.9579, grad_norm: 4.9327
+2020-10-23 11:47:46,256 - mmdet - INFO - Epoch [1][1800/1875]	lr: 1.000e-02, eta: 16:47:08, time: 1.449, data_time: 0.925, memory: 6018, loss_cls: 0.6101, loss_bbox: 0.6997, loss_centerness: 0.6250, loss: 1.9348, grad_norm: 4.0034
+2020-10-23 11:48:58,623 - mmdet - INFO - Epoch [1][1850/1875]	lr: 1.000e-02, eta: 16:46:55, time: 1.447, data_time: 0.908, memory: 6018, loss_cls: 0.6189, loss_bbox: 0.6814, loss_centerness: 0.6235, loss: 1.9238, grad_norm: 3.8968
+2020-10-23 11:49:35,383 - mmdet - INFO - Saving checkpoint at 1 epochs
+2020-10-23 12:01:32,872 - mmdet - INFO - Evaluating bbox...
+2020-10-23 12:03:25,036 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 12:03:25,036 - mmdet - INFO - Epoch(val) [1][1875]	bbox_mAP: 0.0030, bbox_mAP_50: 0.0100, bbox_mAP_75: 0.0010, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.0000, bbox_mAP_l: 0.0030, bbox_mAP_copypaste: 0.003 0.010 0.001 -1.000 0.000 0.003
+2020-10-23 12:04:37,539 - mmdet - INFO - Epoch [2][50/1875]	lr: 1.000e-02, eta: 16:33:03, time: 1.450, data_time: 0.726, memory: 6021, loss_cls: 0.6150, loss_bbox: 0.6641, loss_centerness: 0.6246, loss: 1.9036, grad_norm: 3.7393
+2020-10-23 12:05:47,205 - mmdet - INFO - Epoch [2][100/1875]	lr: 1.000e-02, eta: 16:32:04, time: 1.393, data_time: 0.673, memory: 6026, loss_cls: 0.6111, loss_bbox: 0.6934, loss_centerness: 0.6232, loss: 1.9276, grad_norm: 4.2294
+2020-10-23 12:06:56,099 - mmdet - INFO - Epoch [2][150/1875]	lr: 1.000e-02, eta: 16:30:49, time: 1.378, data_time: 0.695, memory: 6026, loss_cls: 0.6051, loss_bbox: 0.7294, loss_centerness: 0.6238, loss: 1.9584, grad_norm: 4.9054
+2020-10-23 12:08:05,488 - mmdet - INFO - Epoch [2][200/1875]	lr: 1.000e-02, eta: 16:29:45, time: 1.388, data_time: 0.671, memory: 6026, loss_cls: 0.6122, loss_bbox: 0.6724, loss_centerness: 0.6226, loss: 1.9072, grad_norm: 3.8331
+2020-10-23 12:09:15,679 - mmdet - INFO - Epoch [2][250/1875]	lr: 1.000e-02, eta: 16:28:56, time: 1.404, data_time: 0.684, memory: 6026, loss_cls: 0.6056, loss_bbox: 0.7109, loss_centerness: 0.6203, loss: 1.9367, grad_norm: 4.5787
+2020-10-23 12:10:26,404 - mmdet - INFO - Epoch [2][300/1875]	lr: 1.000e-02, eta: 16:28:17, time: 1.415, data_time: 0.687, memory: 6026, loss_cls: 0.6049, loss_bbox: 0.6897, loss_centerness: 0.6237, loss: 1.9183, grad_norm: 3.9571
+2020-10-23 12:11:37,091 - mmdet - INFO - Epoch [2][350/1875]	lr: 1.000e-02, eta: 16:27:36, time: 1.414, data_time: 0.687, memory: 6026, loss_cls: 0.6016, loss_bbox: 0.7162, loss_centerness: 0.6222, loss: 1.9400, grad_norm: 4.4241
+2020-10-23 12:12:47,043 - mmdet - INFO - Epoch [2][400/1875]	lr: 1.000e-02, eta: 16:26:39, time: 1.399, data_time: 0.679, memory: 6026, loss_cls: 0.6142, loss_bbox: 0.7257, loss_centerness: 0.6220, loss: 1.9618, grad_norm: 4.6675
+2020-10-23 12:13:56,674 - mmdet - INFO - Epoch [2][450/1875]	lr: 1.000e-02, eta: 16:25:36, time: 1.393, data_time: 0.686, memory: 6026, loss_cls: 0.6018, loss_bbox: 0.7110, loss_centerness: 0.6214, loss: 1.9343, grad_norm: 4.6132
+2020-10-23 12:15:07,171 - mmdet - INFO - Epoch [2][500/1875]	lr: 1.000e-02, eta: 16:24:49, time: 1.410, data_time: 0.700, memory: 6026, loss_cls: 0.5884, loss_bbox: 0.6413, loss_centerness: 0.6199, loss: 1.8496, grad_norm: 3.4479
+2020-10-23 12:16:17,461 - mmdet - INFO - Epoch [2][550/1875]	lr: 1.000e-02, eta: 16:23:57, time: 1.406, data_time: 0.676, memory: 6026, loss_cls: 0.6075, loss_bbox: 0.6810, loss_centerness: 0.6213, loss: 1.9099, grad_norm: 3.9816
+2020-10-23 12:17:26,939 - mmdet - INFO - Epoch [2][600/1875]	lr: 1.000e-02, eta: 16:22:50, time: 1.390, data_time: 0.673, memory: 6026, loss_cls: 0.6002, loss_bbox: 0.6731, loss_centerness: 0.6210, loss: 1.8943, grad_norm: 3.8704
+2020-10-23 12:18:37,931 - mmdet - INFO - Epoch [2][650/1875]	lr: 1.000e-02, eta: 16:22:08, time: 1.420, data_time: 0.670, memory: 6026, loss_cls: 0.6015, loss_bbox: 0.6597, loss_centerness: 0.6204, loss: 1.8816, grad_norm: 3.9389
+2020-10-23 12:19:49,378 - mmdet - INFO - Epoch [2][700/1875]	lr: 1.000e-02, eta: 16:21:33, time: 1.429, data_time: 0.676, memory: 6026, loss_cls: 0.5892, loss_bbox: 0.6184, loss_centerness: 0.6195, loss: 1.8270, grad_norm: 2.9430
+2020-10-23 12:20:59,897 - mmdet - INFO - Epoch [2][750/1875]	lr: 1.000e-02, eta: 16:20:42, time: 1.410, data_time: 0.671, memory: 6026, loss_cls: 0.5965, loss_bbox: 0.6381, loss_centerness: 0.6209, loss: 1.8555, grad_norm: 3.5058
+2020-10-23 12:22:10,353 - mmdet - INFO - Epoch [2][800/1875]	lr: 1.000e-02, eta: 16:19:48, time: 1.409, data_time: 0.669, memory: 6026, loss_cls: 0.5830, loss_bbox: 0.6859, loss_centerness: 0.6187, loss: 1.8877, grad_norm: 4.5758
+2020-10-23 12:23:23,065 - mmdet - INFO - Epoch [2][850/1875]	lr: 1.000e-02, eta: 16:19:30, time: 1.454, data_time: 0.679, memory: 6026, loss_cls: 0.6004, loss_bbox: 0.6524, loss_centerness: 0.6201, loss: 1.8729, grad_norm: 3.3838
+2020-10-23 12:24:35,494 - mmdet - INFO - Epoch [2][900/1875]	lr: 1.000e-02, eta: 16:19:05, time: 1.449, data_time: 0.651, memory: 6026, loss_cls: 0.5982, loss_bbox: 0.6412, loss_centerness: 0.6193, loss: 1.8587, grad_norm: 3.3856
+2020-10-23 12:25:48,275 - mmdet - INFO - Epoch [2][950/1875]	lr: 1.000e-02, eta: 16:18:43, time: 1.456, data_time: 0.669, memory: 6026, loss_cls: 0.5939, loss_bbox: 0.6248, loss_centerness: 0.6181, loss: 1.8368, grad_norm: 3.1078
+2020-10-23 12:26:59,683 - mmdet - INFO - Epoch [2][1000/1875]	lr: 1.000e-02, eta: 16:18:00, time: 1.428, data_time: 0.646, memory: 6028, loss_cls: 0.6031, loss_bbox: 0.6846, loss_centerness: 0.6202, loss: 1.9078, grad_norm: 4.2315
+2020-10-23 12:28:11,470 - mmdet - INFO - Epoch [2][1050/1875]	lr: 1.000e-02, eta: 16:17:21, time: 1.436, data_time: 0.652, memory: 6028, loss_cls: 0.5964, loss_bbox: 0.6543, loss_centerness: 0.6187, loss: 1.8693, grad_norm: 4.0627
+2020-10-23 12:29:21,812 - mmdet - INFO - Epoch [2][1100/1875]	lr: 1.000e-02, eta: 16:16:20, time: 1.407, data_time: 0.651, memory: 6028, loss_cls: 0.5974, loss_bbox: 0.6820, loss_centerness: 0.6206, loss: 1.9001, grad_norm: 3.9036
+2020-10-23 12:30:33,424 - mmdet - INFO - Epoch [2][1150/1875]	lr: 1.000e-02, eta: 16:15:37, time: 1.432, data_time: 0.663, memory: 6028, loss_cls: 0.5879, loss_bbox: 0.6650, loss_centerness: 0.6194, loss: 1.8723, grad_norm: 3.7340
+2020-10-23 12:31:44,739 - mmdet - INFO - Epoch [2][1200/1875]	lr: 1.000e-02, eta: 16:14:49, time: 1.426, data_time: 0.657, memory: 6028, loss_cls: 0.5828, loss_bbox: 0.6097, loss_centerness: 0.6174, loss: 1.8100, grad_norm: 3.3562
+2020-10-23 12:32:57,211 - mmdet - INFO - Epoch [2][1250/1875]	lr: 1.000e-02, eta: 16:14:16, time: 1.449, data_time: 0.660, memory: 6028, loss_cls: 0.5857, loss_bbox: 0.6333, loss_centerness: 0.6181, loss: 1.8371, grad_norm: 3.6768
+2020-10-23 12:34:09,102 - mmdet - INFO - Epoch [2][1300/1875]	lr: 1.000e-02, eta: 16:13:33, time: 1.438, data_time: 0.669, memory: 6028, loss_cls: 0.5901, loss_bbox: 0.6670, loss_centerness: 0.6211, loss: 1.8783, grad_norm: 3.9562
+2020-10-23 12:35:20,880 - mmdet - INFO - Epoch [2][1350/1875]	lr: 1.000e-02, eta: 16:12:49, time: 1.436, data_time: 0.654, memory: 6028, loss_cls: 0.5849, loss_bbox: 0.6444, loss_centerness: 0.6183, loss: 1.8476, grad_norm: 3.4405
+2020-10-23 12:36:32,728 - mmdet - INFO - Epoch [2][1400/1875]	lr: 1.000e-02, eta: 16:12:04, time: 1.437, data_time: 0.658, memory: 6028, loss_cls: 0.5828, loss_bbox: 0.6273, loss_centerness: 0.6147, loss: 1.8248, grad_norm: 3.8399
+2020-10-23 12:37:44,945 - mmdet - INFO - Epoch [2][1450/1875]	lr: 1.000e-02, eta: 16:11:23, time: 1.444, data_time: 0.656, memory: 6028, loss_cls: 0.5833, loss_bbox: 0.6204, loss_centerness: 0.6177, loss: 1.8214, grad_norm: 3.0196
+2020-10-23 12:38:56,558 - mmdet - INFO - Epoch [2][1500/1875]	lr: 1.000e-02, eta: 16:10:34, time: 1.432, data_time: 0.653, memory: 6028, loss_cls: 0.5823, loss_bbox: 0.6386, loss_centerness: 0.6171, loss: 1.8379, grad_norm: 3.8084
+2020-10-23 12:40:08,733 - mmdet - INFO - Epoch [2][1550/1875]	lr: 1.000e-02, eta: 16:09:51, time: 1.444, data_time: 0.659, memory: 6028, loss_cls: 0.5783, loss_bbox: 0.6517, loss_centerness: 0.6175, loss: 1.8474, grad_norm: 3.9810
+2020-10-23 12:41:20,063 - mmdet - INFO - Epoch [2][1600/1875]	lr: 1.000e-02, eta: 16:08:57, time: 1.427, data_time: 0.656, memory: 6028, loss_cls: 0.5802, loss_bbox: 0.6038, loss_centerness: 0.6167, loss: 1.8006, grad_norm: 3.0773
+2020-10-23 12:42:32,318 - mmdet - INFO - Epoch [2][1650/1875]	lr: 1.000e-02, eta: 16:08:14, time: 1.445, data_time: 0.645, memory: 6028, loss_cls: 0.5800, loss_bbox: 0.6283, loss_centerness: 0.6158, loss: 1.8240, grad_norm: 3.4102
+2020-10-23 12:43:44,200 - mmdet - INFO - Epoch [2][1700/1875]	lr: 1.000e-02, eta: 16:07:25, time: 1.438, data_time: 0.644, memory: 6028, loss_cls: 0.5721, loss_bbox: 0.6141, loss_centerness: 0.6152, loss: 1.8014, grad_norm: 3.1150
+2020-10-23 12:44:56,475 - mmdet - INFO - Epoch [2][1750/1875]	lr: 1.000e-02, eta: 16:06:41, time: 1.445, data_time: 0.648, memory: 6028, loss_cls: 0.5861, loss_bbox: 0.6737, loss_centerness: 0.6178, loss: 1.8776, grad_norm: 4.2234
+2020-10-23 12:46:07,471 - mmdet - INFO - Epoch [2][1800/1875]	lr: 1.000e-02, eta: 16:05:41, time: 1.420, data_time: 0.672, memory: 6028, loss_cls: 0.5849, loss_bbox: 0.6361, loss_centerness: 0.6175, loss: 1.8385, grad_norm: 3.8093
+2020-10-23 12:47:20,058 - mmdet - INFO - Epoch [2][1850/1875]	lr: 1.000e-02, eta: 16:04:58, time: 1.452, data_time: 0.662, memory: 6028, loss_cls: 0.5769, loss_bbox: 0.6423, loss_centerness: 0.6179, loss: 1.8371, grad_norm: 3.7287
+2020-10-23 12:47:56,141 - mmdet - INFO - Saving checkpoint at 2 epochs
+2020-10-23 13:00:03,666 - mmdet - INFO - Evaluating bbox...
+2020-10-23 13:02:07,223 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 13:02:07,223 - mmdet - INFO - Epoch(val) [2][1875]	bbox_mAP: 0.0060, bbox_mAP_50: 0.0190, bbox_mAP_75: 0.0010, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.0050, bbox_mAP_l: 0.0060, bbox_mAP_copypaste: 0.006 0.019 0.001 -1.000 0.005 0.006
+2020-10-23 13:03:21,117 - mmdet - INFO - Epoch [3][50/1875]	lr: 1.000e-02, eta: 15:57:33, time: 1.478, data_time: 0.745, memory: 6028, loss_cls: 0.5857, loss_bbox: 0.6166, loss_centerness: 0.6174, loss: 1.8197, grad_norm: 3.0565
+2020-10-23 13:04:32,439 - mmdet - INFO - Epoch [3][100/1875]	lr: 1.000e-02, eta: 15:56:41, time: 1.426, data_time: 0.661, memory: 6028, loss_cls: 0.5698, loss_bbox: 0.6239, loss_centerness: 0.6144, loss: 1.8081, grad_norm: 3.4929
+2020-10-23 13:05:43,944 - mmdet - INFO - Epoch [3][150/1875]	lr: 1.000e-02, eta: 15:55:49, time: 1.430, data_time: 0.670, memory: 6028, loss_cls: 0.5772, loss_bbox: 0.6254, loss_centerness: 0.6157, loss: 1.8183, grad_norm: 3.5607
+2020-10-23 13:06:55,568 - mmdet - INFO - Epoch [3][200/1875]	lr: 1.000e-02, eta: 15:54:59, time: 1.432, data_time: 0.669, memory: 6028, loss_cls: 0.5724, loss_bbox: 0.6227, loss_centerness: 0.6183, loss: 1.8135, grad_norm: 3.2925
+2020-10-23 13:08:07,990 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 13:08:07,990 - mmdet - INFO - Epoch [3][250/1875]	lr: 1.000e-02, eta: 15:54:16, time: 1.448, data_time: 0.655, memory: 6028, loss_cls: 0.5775, loss_bbox: 0.6035, loss_centerness: 0.6169, loss: 1.7979, grad_norm: 2.8660
+2020-10-23 13:09:20,213 - mmdet - INFO - Epoch [3][300/1875]	lr: 1.000e-02, eta: 15:53:30, time: 1.444, data_time: 0.647, memory: 6028, loss_cls: 0.5805, loss_bbox: 0.6706, loss_centerness: 0.6172, loss: 1.8683, grad_norm: 3.9068
+2020-10-23 13:10:32,579 - mmdet - INFO - Epoch [3][350/1875]	lr: 1.000e-02, eta: 15:52:46, time: 1.447, data_time: 0.668, memory: 6028, loss_cls: 0.5787, loss_bbox: 0.6128, loss_centerness: 0.6154, loss: 1.8069, grad_norm: 2.9807
+2020-10-23 13:11:43,779 - mmdet - INFO - Epoch [3][400/1875]	lr: 1.000e-02, eta: 15:51:49, time: 1.424, data_time: 0.658, memory: 6028, loss_cls: 0.5749, loss_bbox: 0.6076, loss_centerness: 0.6130, loss: 1.7955, grad_norm: 3.4425
+2020-10-23 13:12:55,686 - mmdet - INFO - Epoch [3][450/1875]	lr: 1.000e-02, eta: 15:50:58, time: 1.438, data_time: 0.669, memory: 6029, loss_cls: 0.5740, loss_bbox: 0.5868, loss_centerness: 0.6145, loss: 1.7753, grad_norm: 2.9726
+2020-10-23 13:14:08,489 - mmdet - INFO - Epoch [3][500/1875]	lr: 1.000e-02, eta: 15:50:16, time: 1.456, data_time: 0.658, memory: 6029, loss_cls: 0.5702, loss_bbox: 0.6428, loss_centerness: 0.6127, loss: 1.8257, grad_norm: 4.0960
+2020-10-23 13:15:21,169 - mmdet - INFO - Epoch [3][550/1875]	lr: 1.000e-02, eta: 15:49:32, time: 1.454, data_time: 0.656, memory: 6029, loss_cls: 0.5659, loss_bbox: 0.5856, loss_centerness: 0.6125, loss: 1.7639, grad_norm: 3.2539
+2020-10-23 13:16:33,576 - mmdet - INFO - Epoch [3][600/1875]	lr: 1.000e-02, eta: 15:48:44, time: 1.448, data_time: 0.661, memory: 6029, loss_cls: 0.5795, loss_bbox: 0.6097, loss_centerness: 0.6122, loss: 1.8014, grad_norm: 3.7251
+2020-10-23 13:17:45,105 - mmdet - INFO - Epoch [3][650/1875]	lr: 1.000e-02, eta: 15:47:48, time: 1.431, data_time: 0.648, memory: 6029, loss_cls: 0.5719, loss_bbox: 0.6037, loss_centerness: 0.6129, loss: 1.7885, grad_norm: 3.3039
+2020-10-23 13:18:56,959 - mmdet - INFO - Epoch [3][700/1875]	lr: 1.000e-02, eta: 15:46:55, time: 1.437, data_time: 0.655, memory: 6029, loss_cls: 0.5787, loss_bbox: 0.6129, loss_centerness: 0.6150, loss: 1.8066, grad_norm: 3.5727
+2020-10-23 13:20:08,602 - mmdet - INFO - Epoch [3][750/1875]	lr: 1.000e-02, eta: 15:45:59, time: 1.433, data_time: 0.661, memory: 6029, loss_cls: 0.5696, loss_bbox: 0.5824, loss_centerness: 0.6108, loss: 1.7628, grad_norm: 3.3823
+2020-10-23 13:21:20,757 - mmdet - INFO - Epoch [3][800/1875]	lr: 1.000e-02, eta: 15:45:07, time: 1.443, data_time: 0.656, memory: 6029, loss_cls: 0.5586, loss_bbox: 0.5926, loss_centerness: 0.6114, loss: 1.7625, grad_norm: 3.4055
+2020-10-23 13:22:32,047 - mmdet - INFO - Epoch [3][850/1875]	lr: 1.000e-02, eta: 15:44:08, time: 1.426, data_time: 0.656, memory: 6029, loss_cls: 0.5868, loss_bbox: 0.6066, loss_centerness: 0.6146, loss: 1.8080, grad_norm: 3.6118
+2020-10-23 13:23:44,058 - mmdet - INFO - Epoch [3][900/1875]	lr: 1.000e-02, eta: 15:43:14, time: 1.440, data_time: 0.659, memory: 6029, loss_cls: 0.5808, loss_bbox: 0.6088, loss_centerness: 0.6128, loss: 1.8024, grad_norm: 3.5993
+2020-10-23 13:24:56,121 - mmdet - INFO - Epoch [3][950/1875]	lr: 1.000e-02, eta: 15:42:21, time: 1.441, data_time: 0.666, memory: 6029, loss_cls: 0.5507, loss_bbox: 0.5626, loss_centerness: 0.6093, loss: 1.7225, grad_norm: 3.2836
+2020-10-23 13:26:08,269 - mmdet - INFO - Epoch [3][1000/1875]	lr: 1.000e-02, eta: 15:41:27, time: 1.443, data_time: 0.663, memory: 6029, loss_cls: 0.5692, loss_bbox: 0.5708, loss_centerness: 0.6112, loss: 1.7512, grad_norm: 3.1050
+2020-10-23 13:27:20,567 - mmdet - INFO - Epoch [3][1050/1875]	lr: 1.000e-02, eta: 15:40:35, time: 1.446, data_time: 0.656, memory: 6029, loss_cls: 0.5546, loss_bbox: 0.5703, loss_centerness: 0.6103, loss: 1.7352, grad_norm: 3.2766
+2020-10-23 13:28:33,590 - mmdet - INFO - Epoch [3][1100/1875]	lr: 1.000e-02, eta: 15:39:48, time: 1.460, data_time: 0.658, memory: 6029, loss_cls: 0.5635, loss_bbox: 0.5760, loss_centerness: 0.6128, loss: 1.7522, grad_norm: 3.0758
+2020-10-23 13:29:46,612 - mmdet - INFO - Epoch [3][1150/1875]	lr: 1.000e-02, eta: 15:39:01, time: 1.460, data_time: 0.674, memory: 6029, loss_cls: 0.5614, loss_bbox: 0.5891, loss_centerness: 0.6110, loss: 1.7615, grad_norm: 3.6258
+2020-10-23 13:30:59,129 - mmdet - INFO - Epoch [3][1200/1875]	lr: 1.000e-02, eta: 15:38:09, time: 1.450, data_time: 0.655, memory: 6029, loss_cls: 0.5752, loss_bbox: 0.5683, loss_centerness: 0.6116, loss: 1.7551, grad_norm: 3.3607
+2020-10-23 13:32:10,642 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 13:32:10,643 - mmdet - INFO - Epoch [3][1250/1875]	lr: 1.000e-02, eta: 15:37:09, time: 1.430, data_time: 0.661, memory: 6029, loss_cls: 0.5626, loss_bbox: 0.5789, loss_centerness: 0.6108, loss: 1.7524, grad_norm: 3.1387
+2020-10-23 13:33:23,178 - mmdet - INFO - Epoch [3][1300/1875]	lr: 1.000e-02, eta: 15:36:16, time: 1.451, data_time: 0.653, memory: 6029, loss_cls: 0.5679, loss_bbox: 0.5824, loss_centerness: 0.6101, loss: 1.7604, grad_norm: 3.1954
+2020-10-23 13:34:35,299 - mmdet - INFO - Epoch [3][1350/1875]	lr: 1.000e-02, eta: 15:35:20, time: 1.442, data_time: 0.683, memory: 6029, loss_cls: 0.5717, loss_bbox: 0.5604, loss_centerness: 0.6100, loss: 1.7421, grad_norm: 3.0857
+2020-10-23 13:35:47,353 - mmdet - INFO - Epoch [3][1400/1875]	lr: 1.000e-02, eta: 15:34:23, time: 1.441, data_time: 0.671, memory: 6029, loss_cls: 0.5621, loss_bbox: 0.5579, loss_centerness: 0.6097, loss: 1.7297, grad_norm: 3.0536
+2020-10-23 13:36:58,772 - mmdet - INFO - Epoch [3][1450/1875]	lr: 1.000e-02, eta: 15:33:21, time: 1.428, data_time: 0.651, memory: 6029, loss_cls: 0.5613, loss_bbox: 0.5588, loss_centerness: 0.6104, loss: 1.7305, grad_norm: 3.1099
+2020-10-23 13:38:11,139 - mmdet - INFO - Epoch [3][1500/1875]	lr: 1.000e-02, eta: 15:32:26, time: 1.447, data_time: 0.653, memory: 6029, loss_cls: 0.5570, loss_bbox: 0.5986, loss_centerness: 0.6105, loss: 1.7661, grad_norm: 3.4489
+2020-10-23 13:39:23,380 - mmdet - INFO - Epoch [3][1550/1875]	lr: 1.000e-02, eta: 15:31:29, time: 1.445, data_time: 0.668, memory: 6029, loss_cls: 0.5551, loss_bbox: 0.5722, loss_centerness: 0.6089, loss: 1.7361, grad_norm: 3.6133
+2020-10-23 13:40:36,186 - mmdet - INFO - Epoch [3][1600/1875]	lr: 1.000e-02, eta: 15:30:37, time: 1.456, data_time: 0.675, memory: 6029, loss_cls: 0.5632, loss_bbox: 0.5608, loss_centerness: 0.6118, loss: 1.7358, grad_norm: 2.6390
+2020-10-23 13:41:48,502 - mmdet - INFO - Epoch [3][1650/1875]	lr: 1.000e-02, eta: 15:29:41, time: 1.446, data_time: 0.668, memory: 6029, loss_cls: 0.5645, loss_bbox: 0.5484, loss_centerness: 0.6082, loss: 1.7211, grad_norm: 3.0417
+2020-10-23 13:43:00,302 - mmdet - INFO - Epoch [3][1700/1875]	lr: 1.000e-02, eta: 15:28:40, time: 1.436, data_time: 0.661, memory: 6029, loss_cls: 0.5596, loss_bbox: 0.5694, loss_centerness: 0.6100, loss: 1.7389, grad_norm: 3.1830
+2020-10-23 13:44:12,597 - mmdet - INFO - Epoch [3][1750/1875]	lr: 1.000e-02, eta: 15:27:43, time: 1.446, data_time: 0.662, memory: 6029, loss_cls: 0.5546, loss_bbox: 0.5701, loss_centerness: 0.6083, loss: 1.7330, grad_norm: 3.4983
+2020-10-23 13:45:24,217 - mmdet - INFO - Epoch [3][1800/1875]	lr: 1.000e-02, eta: 15:26:41, time: 1.432, data_time: 0.665, memory: 6029, loss_cls: 0.5584, loss_bbox: 0.5397, loss_centerness: 0.6096, loss: 1.7077, grad_norm: 2.6659
+2020-10-23 13:46:35,657 - mmdet - INFO - Epoch [3][1850/1875]	lr: 1.000e-02, eta: 15:25:37, time: 1.429, data_time: 0.655, memory: 6029, loss_cls: 0.5555, loss_bbox: 0.5615, loss_centerness: 0.6098, loss: 1.7269, grad_norm: 2.8775
+2020-10-23 13:47:11,242 - mmdet - INFO - Saving checkpoint at 3 epochs
+2020-10-23 13:59:10,098 - mmdet - INFO - Evaluating bbox...
+2020-10-23 14:01:21,615 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 14:01:21,616 - mmdet - INFO - Epoch(val) [3][1875]	bbox_mAP: 0.0120, bbox_mAP_50: 0.0320, bbox_mAP_75: 0.0060, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.0080, bbox_mAP_l: 0.0120, bbox_mAP_copypaste: 0.012 0.032 0.006 -1.000 0.008 0.012
+2020-10-23 14:02:35,162 - mmdet - INFO - Epoch [4][50/1875]	lr: 1.000e-02, eta: 15:20:08, time: 1.470, data_time: 0.707, memory: 6029, loss_cls: 0.5565, loss_bbox: 0.5720, loss_centerness: 0.6105, loss: 1.7389, grad_norm: 3.2321
+2020-10-23 14:03:46,173 - mmdet - INFO - Epoch [4][100/1875]	lr: 1.000e-02, eta: 15:19:04, time: 1.421, data_time: 0.660, memory: 6029, loss_cls: 0.5646, loss_bbox: 0.5385, loss_centerness: 0.6091, loss: 1.7123, grad_norm: 2.6500
+2020-10-23 14:04:57,761 - mmdet - INFO - Epoch [4][150/1875]	lr: 1.000e-02, eta: 15:18:03, time: 1.432, data_time: 0.653, memory: 6029, loss_cls: 0.5693, loss_bbox: 0.5773, loss_centerness: 0.6111, loss: 1.7577, grad_norm: 3.2872
+2020-10-23 14:06:08,940 - mmdet - INFO - Epoch [4][200/1875]	lr: 1.000e-02, eta: 15:16:59, time: 1.424, data_time: 0.669, memory: 6029, loss_cls: 0.5471, loss_bbox: 0.5359, loss_centerness: 0.6066, loss: 1.6896, grad_norm: 2.7525
+2020-10-23 14:07:18,990 - mmdet - INFO - Epoch [4][250/1875]	lr: 1.000e-02, eta: 15:15:48, time: 1.401, data_time: 0.653, memory: 6029, loss_cls: 0.5537, loss_bbox: 0.5599, loss_centerness: 0.6067, loss: 1.7203, grad_norm: 3.3846
+2020-10-23 14:08:29,983 - mmdet - INFO - Epoch [4][300/1875]	lr: 1.000e-02, eta: 15:14:43, time: 1.420, data_time: 0.661, memory: 6029, loss_cls: 0.5593, loss_bbox: 0.5977, loss_centerness: 0.6093, loss: 1.7662, grad_norm: 3.6207
+2020-10-23 14:09:41,665 - mmdet - INFO - Epoch [4][350/1875]	lr: 1.000e-02, eta: 15:13:42, time: 1.434, data_time: 0.671, memory: 6029, loss_cls: 0.5470, loss_bbox: 0.5600, loss_centerness: 0.6092, loss: 1.7163, grad_norm: 2.8940
+2020-10-23 14:10:52,708 - mmdet - INFO - Epoch [4][400/1875]	lr: 1.000e-02, eta: 15:12:37, time: 1.421, data_time: 0.670, memory: 6029, loss_cls: 0.5502, loss_bbox: 0.5493, loss_centerness: 0.6080, loss: 1.7076, grad_norm: 2.9161
+2020-10-23 14:12:04,503 - mmdet - INFO - Epoch [4][450/1875]	lr: 1.000e-02, eta: 15:11:37, time: 1.436, data_time: 0.664, memory: 6033, loss_cls: 0.5579, loss_bbox: 0.5236, loss_centerness: 0.6077, loss: 1.6892, grad_norm: 2.4026
+2020-10-23 14:13:16,019 - mmdet - INFO - Epoch [4][500/1875]	lr: 1.000e-02, eta: 15:10:34, time: 1.430, data_time: 0.659, memory: 6033, loss_cls: 0.5533, loss_bbox: 0.5301, loss_centerness: 0.6089, loss: 1.6923, grad_norm: 2.6812
+2020-10-23 14:14:28,616 - mmdet - INFO - Epoch [4][550/1875]	lr: 1.000e-02, eta: 15:09:39, time: 1.452, data_time: 0.663, memory: 6033, loss_cls: 0.5656, loss_bbox: 0.5519, loss_centerness: 0.6116, loss: 1.7290, grad_norm: 2.6651
+2020-10-23 14:15:39,985 - mmdet - INFO - Epoch [4][600/1875]	lr: 1.000e-02, eta: 15:08:35, time: 1.427, data_time: 0.651, memory: 6033, loss_cls: 0.5422, loss_bbox: 0.5202, loss_centerness: 0.6075, loss: 1.6699, grad_norm: 2.3906
+2020-10-23 14:16:50,880 - mmdet - INFO - Epoch [4][650/1875]	lr: 1.000e-02, eta: 15:07:28, time: 1.418, data_time: 0.653, memory: 6033, loss_cls: 0.5483, loss_bbox: 0.5396, loss_centerness: 0.6077, loss: 1.6955, grad_norm: 2.9206
+2020-10-23 14:18:02,641 - mmdet - INFO - Epoch [4][700/1875]	lr: 1.000e-02, eta: 15:06:27, time: 1.435, data_time: 0.646, memory: 6033, loss_cls: 0.5586, loss_bbox: 0.5476, loss_centerness: 0.6087, loss: 1.7149, grad_norm: 2.9578
+2020-10-23 14:19:13,832 - mmdet - INFO - Epoch [4][750/1875]	lr: 1.000e-02, eta: 15:05:22, time: 1.424, data_time: 0.655, memory: 6033, loss_cls: 0.5527, loss_bbox: 0.5511, loss_centerness: 0.6094, loss: 1.7133, grad_norm: 2.9839
+2020-10-23 14:20:25,494 - mmdet - INFO - Epoch [4][800/1875]	lr: 1.000e-02, eta: 15:04:20, time: 1.433, data_time: 0.667, memory: 6033, loss_cls: 0.5575, loss_bbox: 0.5488, loss_centerness: 0.6076, loss: 1.7139, grad_norm: 2.8278
+2020-10-23 14:21:36,790 - mmdet - INFO - Epoch [4][850/1875]	lr: 1.000e-02, eta: 15:03:15, time: 1.426, data_time: 0.659, memory: 6033, loss_cls: 0.5533, loss_bbox: 0.5207, loss_centerness: 0.6064, loss: 1.6804, grad_norm: 2.7216
+2020-10-23 14:22:48,139 - mmdet - INFO - Epoch [4][900/1875]	lr: 1.000e-02, eta: 15:02:11, time: 1.427, data_time: 0.661, memory: 6033, loss_cls: 0.5568, loss_bbox: 0.5372, loss_centerness: 0.6061, loss: 1.7002, grad_norm: 2.7826
+2020-10-23 14:24:00,284 - mmdet - INFO - Epoch [4][950/1875]	lr: 1.000e-02, eta: 15:01:11, time: 1.443, data_time: 0.673, memory: 6033, loss_cls: 0.5520, loss_bbox: 0.5557, loss_centerness: 0.6071, loss: 1.7147, grad_norm: 3.0178
+2020-10-23 14:25:11,687 - mmdet - INFO - Epoch [4][1000/1875]	lr: 1.000e-02, eta: 15:00:07, time: 1.428, data_time: 0.669, memory: 6033, loss_cls: 0.5439, loss_bbox: 0.5280, loss_centerness: 0.6076, loss: 1.6794, grad_norm: 2.5208
+2020-10-23 14:26:22,640 - mmdet - INFO - Epoch [4][1050/1875]	lr: 1.000e-02, eta: 14:59:00, time: 1.419, data_time: 0.656, memory: 6033, loss_cls: 0.5444, loss_bbox: 0.5286, loss_centerness: 0.6063, loss: 1.6793, grad_norm: 2.6460
+2020-10-23 14:27:34,515 - mmdet - INFO - Epoch [4][1100/1875]	lr: 1.000e-02, eta: 14:57:58, time: 1.438, data_time: 0.668, memory: 6033, loss_cls: 0.5420, loss_bbox: 0.5159, loss_centerness: 0.6066, loss: 1.6645, grad_norm: 2.5158
+2020-10-23 14:28:45,910 - mmdet - INFO - Epoch [4][1150/1875]	lr: 1.000e-02, eta: 14:56:53, time: 1.428, data_time: 0.653, memory: 6033, loss_cls: 0.5348, loss_bbox: 0.5068, loss_centerness: 0.6044, loss: 1.6459, grad_norm: 2.5923
+2020-10-23 14:29:57,856 - mmdet - INFO - Epoch [4][1200/1875]	lr: 1.000e-02, eta: 14:55:51, time: 1.439, data_time: 0.654, memory: 6033, loss_cls: 0.5462, loss_bbox: 0.5216, loss_centerness: 0.6057, loss: 1.6735, grad_norm: 2.6110
+2020-10-23 14:31:09,561 - mmdet - INFO - Epoch [4][1250/1875]	lr: 1.000e-02, eta: 14:54:48, time: 1.434, data_time: 0.658, memory: 6033, loss_cls: 0.5465, loss_bbox: 0.5443, loss_centerness: 0.6081, loss: 1.6990, grad_norm: 2.9491
+2020-10-23 14:32:22,709 - mmdet - INFO - Epoch [4][1300/1875]	lr: 1.000e-02, eta: 14:53:53, time: 1.463, data_time: 0.680, memory: 6033, loss_cls: 0.5363, loss_bbox: 0.5244, loss_centerness: 0.6057, loss: 1.6664, grad_norm: 2.6220
+2020-10-23 14:33:33,928 - mmdet - INFO - Epoch [4][1350/1875]	lr: 1.000e-02, eta: 14:52:47, time: 1.424, data_time: 0.650, memory: 6033, loss_cls: 0.5502, loss_bbox: 0.5338, loss_centerness: 0.6065, loss: 1.6906, grad_norm: 2.6374
+2020-10-23 14:34:45,844 - mmdet - INFO - Epoch [4][1400/1875]	lr: 1.000e-02, eta: 14:51:44, time: 1.438, data_time: 0.662, memory: 6033, loss_cls: 0.5384, loss_bbox: 0.5171, loss_centerness: 0.6045, loss: 1.6600, grad_norm: 2.6011
+2020-10-23 14:35:57,749 - mmdet - INFO - Epoch [4][1450/1875]	lr: 1.000e-02, eta: 14:50:42, time: 1.438, data_time: 0.656, memory: 6033, loss_cls: 0.5384, loss_bbox: 0.5218, loss_centerness: 0.6078, loss: 1.6680, grad_norm: 2.4297
+2020-10-23 14:37:08,837 - mmdet - INFO - Epoch [4][1500/1875]	lr: 1.000e-02, eta: 14:49:35, time: 1.422, data_time: 0.652, memory: 6033, loss_cls: 0.5386, loss_bbox: 0.5107, loss_centerness: 0.6065, loss: 1.6558, grad_norm: 2.3510
+2020-10-23 14:38:20,322 - mmdet - INFO - Epoch [4][1550/1875]	lr: 1.000e-02, eta: 14:48:30, time: 1.430, data_time: 0.667, memory: 6033, loss_cls: 0.5469, loss_bbox: 0.5240, loss_centerness: 0.6072, loss: 1.6781, grad_norm: 2.5627
+2020-10-23 14:39:31,268 - mmdet - INFO - Epoch [4][1600/1875]	lr: 1.000e-02, eta: 14:47:22, time: 1.419, data_time: 0.665, memory: 6033, loss_cls: 0.5297, loss_bbox: 0.5135, loss_centerness: 0.6035, loss: 1.6467, grad_norm: 2.5065
+2020-10-23 14:40:42,522 - mmdet - INFO - Epoch [4][1650/1875]	lr: 1.000e-02, eta: 14:46:15, time: 1.425, data_time: 0.662, memory: 6033, loss_cls: 0.5368, loss_bbox: 0.5190, loss_centerness: 0.6060, loss: 1.6619, grad_norm: 2.3811
+2020-10-23 14:41:54,020 - mmdet - INFO - Epoch [4][1700/1875]	lr: 1.000e-02, eta: 14:45:10, time: 1.430, data_time: 0.668, memory: 6033, loss_cls: 0.5411, loss_bbox: 0.5185, loss_centerness: 0.6052, loss: 1.6648, grad_norm: 2.5384
+2020-10-23 14:43:05,274 - mmdet - INFO - Epoch [4][1750/1875]	lr: 1.000e-02, eta: 14:44:03, time: 1.425, data_time: 0.655, memory: 6033, loss_cls: 0.5279, loss_bbox: 0.5151, loss_centerness: 0.6060, loss: 1.6490, grad_norm: 2.5712
+2020-10-23 14:44:16,672 - mmdet - INFO - Epoch [4][1800/1875]	lr: 1.000e-02, eta: 14:42:57, time: 1.428, data_time: 0.667, memory: 6033, loss_cls: 0.5408, loss_bbox: 0.5213, loss_centerness: 0.6055, loss: 1.6676, grad_norm: 2.7132
+2020-10-23 14:45:29,019 - mmdet - INFO - Epoch [4][1850/1875]	lr: 1.000e-02, eta: 14:41:56, time: 1.447, data_time: 0.663, memory: 6033, loss_cls: 0.5402, loss_bbox: 0.5271, loss_centerness: 0.6055, loss: 1.6728, grad_norm: 2.5880
+2020-10-23 14:46:05,201 - mmdet - INFO - Saving checkpoint at 4 epochs
+2020-10-23 14:57:53,049 - mmdet - INFO - Evaluating bbox...
+2020-10-23 15:00:07,634 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 15:00:07,635 - mmdet - INFO - Epoch(val) [4][1875]	bbox_mAP: 0.0160, bbox_mAP_50: 0.0440, bbox_mAP_75: 0.0080, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.0160, bbox_mAP_l: 0.0170, bbox_mAP_copypaste: 0.016 0.044 0.008 -1.000 0.016 0.017
+2020-10-23 15:01:17,985 - mmdet - INFO - Epoch [5][50/1875]	lr: 1.000e-02, eta: 14:37:15, time: 1.407, data_time: 0.716, memory: 6033, loss_cls: 0.5517, loss_bbox: 0.5269, loss_centerness: 0.6059, loss: 1.6845, grad_norm: 2.7254
+2020-10-23 15:02:26,174 - mmdet - INFO - Epoch [5][100/1875]	lr: 1.000e-02, eta: 14:35:54, time: 1.364, data_time: 0.678, memory: 6033, loss_cls: 0.5390, loss_bbox: 0.5161, loss_centerness: 0.6059, loss: 1.6609, grad_norm: 2.4032
+2020-10-23 15:03:34,567 - mmdet - INFO - Epoch [5][150/1875]	lr: 1.000e-02, eta: 14:34:35, time: 1.368, data_time: 0.682, memory: 6033, loss_cls: 0.5239, loss_bbox: 0.4975, loss_centerness: 0.6036, loss: 1.6250, grad_norm: 2.5909
+2020-10-23 15:04:43,702 - mmdet - INFO - Epoch [5][200/1875]	lr: 1.000e-02, eta: 14:33:19, time: 1.383, data_time: 0.696, memory: 6033, loss_cls: 0.5417, loss_bbox: 0.5071, loss_centerness: 0.6056, loss: 1.6544, grad_norm: 2.4268
+2020-10-23 15:05:53,163 - mmdet - INFO - Epoch [5][250/1875]	lr: 1.000e-02, eta: 14:32:05, time: 1.389, data_time: 0.673, memory: 6033, loss_cls: 0.5401, loss_bbox: 0.5051, loss_centerness: 0.6053, loss: 1.6505, grad_norm: 2.3209
+2020-10-23 15:07:02,261 - mmdet - INFO - Epoch [5][300/1875]	lr: 1.000e-02, eta: 14:30:50, time: 1.382, data_time: 0.686, memory: 6033, loss_cls: 0.5342, loss_bbox: 0.5140, loss_centerness: 0.6024, loss: 1.6506, grad_norm: 2.5363
+2020-10-23 15:08:10,743 - mmdet - INFO - Epoch [5][350/1875]	lr: 1.000e-02, eta: 14:29:31, time: 1.370, data_time: 0.680, memory: 6033, loss_cls: 0.5429, loss_bbox: 0.4962, loss_centerness: 0.6051, loss: 1.6443, grad_norm: 2.2244
+2020-10-23 15:09:19,380 - mmdet - INFO - Epoch [5][400/1875]	lr: 1.000e-02, eta: 14:28:13, time: 1.373, data_time: 0.684, memory: 6033, loss_cls: 0.5241, loss_bbox: 0.4985, loss_centerness: 0.6022, loss: 1.6247, grad_norm: 2.2510
+2020-10-23 15:10:28,299 - mmdet - INFO - Epoch [5][450/1875]	lr: 1.000e-02, eta: 14:26:57, time: 1.378, data_time: 0.678, memory: 6033, loss_cls: 0.5500, loss_bbox: 0.5040, loss_centerness: 0.6054, loss: 1.6594, grad_norm: 2.5832
+2020-10-23 15:11:36,314 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 15:11:36,315 - mmdet - INFO - Epoch [5][500/1875]	lr: 1.000e-02, eta: 14:25:37, time: 1.360, data_time: 0.667, memory: 6033, loss_cls: 0.5442, loss_bbox: 0.5278, loss_centerness: 0.6055, loss: 1.6775, grad_norm: 2.4963
+2020-10-23 15:12:46,129 - mmdet - INFO - Epoch [5][550/1875]	lr: 1.000e-02, eta: 14:24:25, time: 1.396, data_time: 0.677, memory: 6033, loss_cls: 0.5333, loss_bbox: 0.5150, loss_centerness: 0.6042, loss: 1.6525, grad_norm: 2.4656
+2020-10-23 15:13:54,912 - mmdet - INFO - Epoch [5][600/1875]	lr: 1.000e-02, eta: 14:23:08, time: 1.376, data_time: 0.671, memory: 6033, loss_cls: 0.5448, loss_bbox: 0.5284, loss_centerness: 0.6063, loss: 1.6794, grad_norm: 2.7210
+2020-10-23 15:15:04,822 - mmdet - INFO - Epoch [5][650/1875]	lr: 1.000e-02, eta: 14:21:57, time: 1.398, data_time: 0.687, memory: 6033, loss_cls: 0.5427, loss_bbox: 0.5204, loss_centerness: 0.6051, loss: 1.6682, grad_norm: 2.6953
+2020-10-23 15:16:13,858 - mmdet - INFO - Epoch [5][700/1875]	lr: 1.000e-02, eta: 14:20:42, time: 1.381, data_time: 0.675, memory: 6033, loss_cls: 0.5353, loss_bbox: 0.5252, loss_centerness: 0.6049, loss: 1.6654, grad_norm: 2.5556
+2020-10-23 15:17:22,270 - mmdet - INFO - Epoch [5][750/1875]	lr: 1.000e-02, eta: 14:19:24, time: 1.368, data_time: 0.670, memory: 6033, loss_cls: 0.5335, loss_bbox: 0.4934, loss_centerness: 0.6039, loss: 1.6308, grad_norm: 2.2804
+2020-10-23 15:18:30,080 - mmdet - INFO - Epoch [5][800/1875]	lr: 1.000e-02, eta: 14:18:03, time: 1.356, data_time: 0.664, memory: 6033, loss_cls: 0.5259, loss_bbox: 0.4995, loss_centerness: 0.6032, loss: 1.6286, grad_norm: 2.3545
+2020-10-23 15:19:38,472 - mmdet - INFO - Epoch [5][850/1875]	lr: 1.000e-02, eta: 14:16:45, time: 1.368, data_time: 0.659, memory: 6033, loss_cls: 0.5310, loss_bbox: 0.5045, loss_centerness: 0.6047, loss: 1.6402, grad_norm: 2.4257
+2020-10-23 15:20:47,505 - mmdet - INFO - Epoch [5][900/1875]	lr: 1.000e-02, eta: 14:15:31, time: 1.380, data_time: 0.670, memory: 6033, loss_cls: 0.5298, loss_bbox: 0.4819, loss_centerness: 0.6030, loss: 1.6147, grad_norm: 2.3023
+2020-10-23 15:21:56,814 - mmdet - INFO - Epoch [5][950/1875]	lr: 1.000e-02, eta: 14:14:17, time: 1.386, data_time: 0.678, memory: 6033, loss_cls: 0.5305, loss_bbox: 0.4902, loss_centerness: 0.6029, loss: 1.6236, grad_norm: 2.3862
+2020-10-23 15:23:05,219 - mmdet - INFO - Epoch [5][1000/1875]	lr: 1.000e-02, eta: 14:12:59, time: 1.368, data_time: 0.676, memory: 6033, loss_cls: 0.5227, loss_bbox: 0.4920, loss_centerness: 0.6011, loss: 1.6158, grad_norm: 2.3453
+2020-10-23 15:24:14,190 - mmdet - INFO - Epoch [5][1050/1875]	lr: 1.000e-02, eta: 14:11:44, time: 1.379, data_time: 0.690, memory: 6033, loss_cls: 0.5256, loss_bbox: 0.5099, loss_centerness: 0.6032, loss: 1.6387, grad_norm: 2.5199
+2020-10-23 15:25:22,933 - mmdet - INFO - Epoch [5][1100/1875]	lr: 1.000e-02, eta: 14:10:29, time: 1.375, data_time: 0.666, memory: 6033, loss_cls: 0.5310, loss_bbox: 0.5039, loss_centerness: 0.6021, loss: 1.6370, grad_norm: 2.5814
+2020-10-23 15:26:31,945 - mmdet - INFO - Epoch [5][1150/1875]	lr: 1.000e-02, eta: 14:09:14, time: 1.380, data_time: 0.687, memory: 6033, loss_cls: 0.5472, loss_bbox: 0.5236, loss_centerness: 0.6063, loss: 1.6771, grad_norm: 2.3840
+2020-10-23 15:27:40,419 - mmdet - INFO - Epoch [5][1200/1875]	lr: 1.000e-02, eta: 14:07:57, time: 1.370, data_time: 0.659, memory: 6033, loss_cls: 0.5242, loss_bbox: 0.5060, loss_centerness: 0.6039, loss: 1.6342, grad_norm: 2.4090
+2020-10-23 15:28:47,838 - mmdet - INFO - Epoch [5][1250/1875]	lr: 1.000e-02, eta: 14:06:36, time: 1.348, data_time: 0.660, memory: 6033, loss_cls: 0.5421, loss_bbox: 0.5078, loss_centerness: 0.6039, loss: 1.6537, grad_norm: 2.3158
+2020-10-23 15:29:55,212 - mmdet - INFO - Epoch [5][1300/1875]	lr: 1.000e-02, eta: 14:05:15, time: 1.347, data_time: 0.656, memory: 6033, loss_cls: 0.5264, loss_bbox: 0.4913, loss_centerness: 0.6042, loss: 1.6220, grad_norm: 2.5387
+2020-10-23 15:31:03,835 - mmdet - INFO - Epoch [5][1350/1875]	lr: 1.000e-02, eta: 14:03:59, time: 1.372, data_time: 0.674, memory: 6033, loss_cls: 0.5341, loss_bbox: 0.5081, loss_centerness: 0.6043, loss: 1.6465, grad_norm: 2.5094
+2020-10-23 15:32:12,181 - mmdet - INFO - Epoch [5][1400/1875]	lr: 1.000e-02, eta: 14:02:42, time: 1.367, data_time: 0.688, memory: 6039, loss_cls: 0.5254, loss_bbox: 0.5170, loss_centerness: 0.6043, loss: 1.6466, grad_norm: 2.5618
+2020-10-23 15:33:20,496 - mmdet - INFO - Epoch [5][1450/1875]	lr: 1.000e-02, eta: 14:01:25, time: 1.366, data_time: 0.670, memory: 6039, loss_cls: 0.5248, loss_bbox: 0.4786, loss_centerness: 0.6018, loss: 1.6052, grad_norm: 2.1817
+2020-10-23 15:34:29,564 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 15:34:29,564 - mmdet - INFO - Epoch [5][1500/1875]	lr: 1.000e-02, eta: 14:00:11, time: 1.381, data_time: 0.666, memory: 6039, loss_cls: 0.5295, loss_bbox: 0.5151, loss_centerness: 0.6046, loss: 1.6492, grad_norm: 2.5994
+2020-10-23 15:35:38,621 - mmdet - INFO - Epoch [5][1550/1875]	lr: 1.000e-02, eta: 13:58:58, time: 1.381, data_time: 0.678, memory: 6039, loss_cls: 0.5233, loss_bbox: 0.4838, loss_centerness: 0.6020, loss: 1.6091, grad_norm: 2.4018
+2020-10-23 15:36:46,992 - mmdet - INFO - Epoch [5][1600/1875]	lr: 1.000e-02, eta: 13:57:41, time: 1.367, data_time: 0.671, memory: 6039, loss_cls: 0.5276, loss_bbox: 0.4936, loss_centerness: 0.6013, loss: 1.6225, grad_norm: 2.4380
+2020-10-23 15:37:55,895 - mmdet - INFO - Epoch [5][1650/1875]	lr: 1.000e-02, eta: 13:56:27, time: 1.378, data_time: 0.674, memory: 6039, loss_cls: 0.5267, loss_bbox: 0.4784, loss_centerness: 0.6013, loss: 1.6064, grad_norm: 2.1700
+2020-10-23 15:39:03,926 - mmdet - INFO - Epoch [5][1700/1875]	lr: 1.000e-02, eta: 13:55:09, time: 1.361, data_time: 0.674, memory: 6039, loss_cls: 0.5277, loss_bbox: 0.4895, loss_centerness: 0.6032, loss: 1.6204, grad_norm: 2.3821
+2020-10-23 15:40:12,702 - mmdet - INFO - Epoch [5][1750/1875]	lr: 1.000e-02, eta: 13:53:54, time: 1.376, data_time: 0.699, memory: 6039, loss_cls: 0.5416, loss_bbox: 0.5167, loss_centerness: 0.6046, loss: 1.6629, grad_norm: 2.2658
+2020-10-23 15:41:21,438 - mmdet - INFO - Epoch [5][1800/1875]	lr: 1.000e-02, eta: 13:52:40, time: 1.375, data_time: 0.671, memory: 6039, loss_cls: 0.5171, loss_bbox: 0.4861, loss_centerness: 0.6031, loss: 1.6063, grad_norm: 2.4133
+2020-10-23 15:42:30,554 - mmdet - INFO - Epoch [5][1850/1875]	lr: 1.000e-02, eta: 13:51:26, time: 1.382, data_time: 0.683, memory: 6039, loss_cls: 0.5324, loss_bbox: 0.4889, loss_centerness: 0.6029, loss: 1.6242, grad_norm: 2.2866
+2020-10-23 15:43:05,271 - mmdet - INFO - Saving checkpoint at 5 epochs
+2020-10-23 15:54:27,464 - mmdet - INFO - Evaluating bbox...
+2020-10-23 15:56:27,543 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_gn-head_mstrain_640-800_4x4_2x_coco_moco.py
+2020-10-23 15:56:27,543 - mmdet - INFO - Epoch(val) [5][1875]	bbox_mAP: 0.0190, bbox_mAP_50: 0.0550, bbox_mAP_75: 0.0090, bbox_mAP_s: -1.0000, bbox_mAP_m: 0.0070, bbox_mAP_l: 0.0200, bbox_mAP_copypaste: 0.019 0.055 0.009 -1.000 0.007 0.020
+2020-10-23 15:57:38,574 - mmdet - INFO - Epoch [6][50/1875]	lr: 1.000e-02, eta: 13:47:33, time: 1.420, data_time: 0.733, memory: 6039, loss_cls: 0.5223, loss_bbox: 0.4838, loss_centerness: 0.6020, loss: 1.6081, grad_norm: 2.3532
+2020-10-23 15:58:47,049 - mmdet - INFO - Epoch [6][100/1875]	lr: 1.000e-02, eta: 13:46:19, time: 1.369, data_time: 0.677, memory: 6039, loss_cls: 0.5163, loss_bbox: 0.4804, loss_centerness: 0.6010, loss: 1.5977, grad_norm: 2.2553
+2020-10-23 15:59:54,254 - mmdet - INFO - Epoch [6][150/1875]	lr: 1.000e-02, eta: 13:44:59, time: 1.344, data_time: 0.667, memory: 6039, loss_cls: 0.5329, loss_bbox: 0.5011, loss_centerness: 0.6017, loss: 1.6356, grad_norm: 2.5333
+2020-10-23 16:01:02,422 - mmdet - INFO - Epoch [6][200/1875]	lr: 1.000e-02, eta: 13:43:44, time: 1.363, data_time: 0.655, memory: 6039, loss_cls: 0.5202, loss_bbox: 0.5054, loss_centerness: 0.6022, loss: 1.6278, grad_norm: 2.4300
+2020-10-23 16:02:11,899 - mmdet - INFO - Epoch [6][250/1875]	lr: 1.000e-02, eta: 13:42:33, time: 1.389, data_time: 0.664, memory: 6039, loss_cls: 0.5274, loss_bbox: 0.4989, loss_centerness: 0.6022, loss: 1.6285, grad_norm: 2.3362
+2020-10-23 16:03:20,755 - mmdet - INFO - Epoch [6][300/1875]	lr: 1.000e-02, eta: 13:41:20, time: 1.377, data_time: 0.654, memory: 6039, loss_cls: 0.5196, loss_bbox: 0.4874, loss_centerness: 0.6029, loss: 1.6099, grad_norm: 2.4348
+2020-10-23 16:04:29,027 - mmdet - INFO - Epoch [6][350/1875]	lr: 1.000e-02, eta: 13:40:05, time: 1.365, data_time: 0.688, memory: 6039, loss_cls: 0.5125, loss_bbox: 0.4693, loss_centerness: 0.6026, loss: 1.5844, grad_norm: 2.2244
+2020-10-23 16:05:37,590 - mmdet - INFO - Epoch [6][400/1875]	lr: 1.000e-02, eta: 13:38:51, time: 1.372, data_time: 0.667, memory: 6039, loss_cls: 0.5240, loss_bbox: 0.4886, loss_centerness: 0.6021, loss: 1.6148, grad_norm: 2.3380
+2020-10-23 16:06:47,208 - mmdet - INFO - Epoch [6][450/1875]	lr: 1.000e-02, eta: 13:37:40, time: 1.392, data_time: 0.676, memory: 6039, loss_cls: 0.5139, loss_bbox: 0.4866, loss_centerness: 0.6043, loss: 1.6048, grad_norm: 2.3152
+2020-10-23 16:07:55,544 - mmdet - INFO - Epoch [6][500/1875]	lr: 1.000e-02, eta: 13:36:26, time: 1.367, data_time: 0.676, memory: 6039, loss_cls: 0.5197, loss_bbox: 0.4932, loss_centerness: 0.6029, loss: 1.6158, grad_norm: 2.4294
+2020-10-23 16:09:03,888 - mmdet - INFO - Epoch [6][550/1875]	lr: 1.000e-02, eta: 13:35:11, time: 1.367, data_time: 0.675, memory: 6039, loss_cls: 0.5188, loss_bbox: 0.4891, loss_centerness: 0.6026, loss: 1.6106, grad_norm: 2.5419
+2020-10-23 16:10:12,922 - mmdet - INFO - Epoch [6][600/1875]	lr: 1.000e-02, eta: 13:33:59, time: 1.381, data_time: 0.671, memory: 6039, loss_cls: 0.5234, loss_bbox: 0.4842, loss_centerness: 0.6016, loss: 1.6092, grad_norm: 2.3879
+2020-10-23 16:11:21,361 - mmdet - INFO - Epoch [6][650/1875]	lr: 1.000e-02, eta: 13:32:45, time: 1.369, data_time: 0.662, memory: 6039, loss_cls: 0.5219, loss_bbox: 0.4842, loss_centerness: 0.6033, loss: 1.6094, grad_norm: 2.2533
+2020-10-23 16:12:29,492 - mmdet - INFO - Epoch [6][700/1875]	lr: 1.000e-02, eta: 13:31:30, time: 1.363, data_time: 0.682, memory: 6039, loss_cls: 0.5215, loss_bbox: 0.4958, loss_centerness: 0.6029, loss: 1.6201, grad_norm: 2.5041
+2020-10-23 16:13:38,086 - mmdet - INFO - Epoch [6][750/1875]	lr: 1.000e-02, eta: 13:30:16, time: 1.372, data_time: 0.671, memory: 6039, loss_cls: 0.5214, loss_bbox: 0.4933, loss_centerness: 0.6010, loss: 1.6157, grad_norm: 2.4694
+2020-10-23 16:14:46,076 - mmdet - INFO - Epoch [6][800/1875]	lr: 1.000e-02, eta: 13:29:00, time: 1.360, data_time: 0.672, memory: 6039, loss_cls: 0.5142, loss_bbox: 0.4716, loss_centerness: 0.6012, loss: 1.5870, grad_norm: 2.2744
+2020-10-23 16:15:54,341 - mmdet - INFO - Epoch [6][850/1875]	lr: 1.000e-02, eta: 13:27:46, time: 1.365, data_time: 0.668, memory: 6039, loss_cls: 0.5125, loss_bbox: 0.4769, loss_centerness: 0.6031, loss: 1.5925, grad_norm: 2.3268
+2020-10-23 16:17:03,264 - mmdet - INFO - Epoch [6][900/1875]	lr: 1.000e-02, eta: 13:26:34, time: 1.378, data_time: 0.665, memory: 6039, loss_cls: 0.5182, loss_bbox: 0.4732, loss_centerness: 0.6007, loss: 1.5921, grad_norm: 2.3566
+2020-10-23 16:18:11,414 - mmdet - INFO - Epoch [6][950/1875]	lr: 1.000e-02, eta: 13:25:19, time: 1.363, data_time: 0.670, memory: 6039, loss_cls: 0.5263, loss_bbox: 0.4896, loss_centerness: 0.6024, loss: 1.6182, grad_norm: 2.3508
+2020-10-23 16:19:20,085 - mmdet - INFO - Epoch [6][1000/1875]	lr: 1.000e-02, eta: 13:24:06, time: 1.373, data_time: 0.687, memory: 6039, loss_cls: 0.5354, loss_bbox: 0.5050, loss_centerness: 0.6042, loss: 1.6446, grad_norm: 2.3743
+2020-10-23 16:20:28,346 - mmdet - INFO - Epoch [6][1050/1875]	lr: 1.000e-02, eta: 13:22:51, time: 1.365, data_time: 0.660, memory: 6039, loss_cls: 0.5165, loss_bbox: 0.4777, loss_centerness: 0.6024, loss: 1.5966, grad_norm: 2.2190
+2020-10-23 16:21:37,254 - mmdet - INFO - Epoch [6][1100/1875]	lr: 1.000e-02, eta: 13:21:39, time: 1.378, data_time: 0.674, memory: 6039, loss_cls: 0.5249, loss_bbox: 0.4778, loss_centerness: 0.6020, loss: 1.6047, grad_norm: 2.2752
+2020-10-23 16:22:45,632 - mmdet - INFO - Epoch [6][1150/1875]	lr: 1.000e-02, eta: 13:20:25, time: 1.368, data_time: 0.665, memory: 6039, loss_cls: 0.5247, loss_bbox: 0.5044, loss_centerness: 0.6028, loss: 1.6319, grad_norm: 2.3044
+2020-10-23 16:23:54,303 - mmdet - INFO - Epoch [6][1200/1875]	lr: 1.000e-02, eta: 13:19:13, time: 1.373, data_time: 0.670, memory: 6039, loss_cls: 0.5133, loss_bbox: 0.4767, loss_centerness: 0.6015, loss: 1.5915, grad_norm: 2.2632
+2020-10-23 16:25:02,925 - mmdet - INFO - Epoch [6][1250/1875]	lr: 1.000e-02, eta: 13:18:00, time: 1.372, data_time: 0.655, memory: 6039, loss_cls: 0.5137, loss_bbox: 0.4933, loss_centerness: 0.6005, loss: 1.6075, grad_norm: 2.4015
+2020-10-23 16:26:11,986 - mmdet - INFO - Epoch [6][1300/1875]	lr: 1.000e-02, eta: 13:16:48, time: 1.381, data_time: 0.669, memory: 6039, loss_cls: 0.5126, loss_bbox: 0.4695, loss_centerness: 0.6009, loss: 1.5830, grad_norm: 2.2622
+2020-10-23 16:27:20,692 - mmdet - INFO - Epoch [6][1350/1875]	lr: 1.000e-02, eta: 13:15:35, time: 1.374, data_time: 0.672, memory: 6039, loss_cls: 0.5128, loss_bbox: 0.4745, loss_centerness: 0.6005, loss: 1.5879, grad_norm: 2.2905
+2020-10-23 16:28:29,583 - mmdet - INFO - Epoch [6][1400/1875]	lr: 1.000e-02, eta: 13:14:23, time: 1.378, data_time: 0.666, memory: 6039, loss_cls: 0.5144, loss_bbox: 0.4817, loss_centerness: 0.6009, loss: 1.5969, grad_norm: 2.4230
+2020-10-23 16:29:38,701 - mmdet - INFO - Epoch [6][1450/1875]	lr: 1.000e-02, eta: 13:13:12, time: 1.382, data_time: 0.666, memory: 6039, loss_cls: 0.5155, loss_bbox: 0.4921, loss_centerness: 0.6002, loss: 1.6078, grad_norm: 2.6090
+2020-10-23 16:30:47,740 - mmdet - INFO - Epoch [6][1500/1875]	lr: 1.000e-02, eta: 13:12:01, time: 1.381, data_time: 0.668, memory: 6039, loss_cls: 0.5384, loss_bbox: 0.5248, loss_centerness: 0.6039, loss: 1.6671, grad_norm: 2.8733

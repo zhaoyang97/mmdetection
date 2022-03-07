@@ -1,0 +1,267 @@
+2020-10-15 15:02:15,803 - mmdet - INFO - Environment info:
+------------------------------------------------------------
+sys.platform: linux
+Python: 3.7.9 (default, Aug 31 2020, 12:42:55) [GCC 7.3.0]
+CUDA available: True
+GPU 0,1,2,3: GeForce RTX 2080 Ti
+CUDA_HOME: /usr/local/cuda
+NVCC: Cuda compilation tools, release 10.0, V10.0.130
+GCC: gcc (Ubuntu 5.4.0-6ubuntu1~16.04.11) 5.4.0 20160609
+PyTorch: 1.4.0
+PyTorch compiling details: PyTorch built with:
+  - GCC 7.3
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v0.21.1 (Git Hash 7d2fd500bc78936d1d648ca713b901012f470dbc)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CUDA Runtime 10.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 7.6.3
+  - Magma 2.5.1
+  - Build settings: BLAS=MKL, BUILD_NAMEDTENSOR=OFF, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -fopenmp -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -O2 -fPIC -Wno-narrowing -Wall -Wextra -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Wno-stringop-overflow, DISABLE_NUMA=1, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_STATIC_DISPATCH=OFF, 
+
+TorchVision: 0.5.0
+OpenCV: 4.4.0
+MMCV: 1.1.5
+MMCV Compiler: GCC 7.3
+MMCV CUDA Compiler: 10.0
+MMDetection: 2.5.0+
+------------------------------------------------------------
+
+2020-10-15 15:02:16,226 - mmdet - INFO - Distributed training: True
+2020-10-15 15:02:16,607 - mmdet - INFO - Config:
+dataset_type = 'CocoDataset'
+data_root = 'data/coco/'
+annotations_root = 'annotations/'
+image_root = '/root/userfolder/data/TCTAnnotatedData/'
+classes = ('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+           'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+           'dysbacteriosis_herpes_act', 'ec')
+img_norm_cfg = dict(
+    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
+train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='Normalize',
+        mean=[102.9801, 115.9465, 122.7717],
+        std=[1.0, 1.0, 1.0],
+        to_rgb=False),
+    dict(type='Pad', size_divisor=32),
+    dict(type='DefaultFormatBundle'),
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(1333, 800),
+        flip=False,
+        transforms=[
+            dict(type='Resize', keep_ratio=True),
+            dict(type='RandomFlip'),
+            dict(
+                type='Normalize',
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
+            dict(type='Pad', size_divisor=32),
+            dict(type='ImageToTensor', keys=['img']),
+            dict(type='Collect', keys=['img'])
+        ])
+]
+data = dict(
+    samples_per_gpu=4,
+    workers_per_gpu=0,
+    train=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/train30000-cat10.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+            dict(type='RandomFlip', flip_ratio=0.5),
+            dict(
+                type='Normalize',
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
+            dict(type='Pad', size_divisor=32),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+        ]),
+    val=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/val.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1333, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]),
+    test=dict(
+        type='CocoDataset',
+        classes=('normal', 'ascus', 'asch', 'lsil', 'hsil_scc_omn',
+                 'agc_adenocarcinoma_em', 'vaginalis', 'monilia',
+                 'dysbacteriosis_herpes_act', 'ec'),
+        ann_file='annotations/test.json',
+        img_prefix='/root/userfolder/data/TCTAnnotatedData/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1333, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]))
+evaluation = dict(interval=1, metric='bbox')
+optimizer = dict(
+    type='SGD',
+    lr=0.001,
+    momentum=0.9,
+    weight_decay=0.0001,
+    paramwise_cfg=dict(bias_lr_mult=2.0, bias_decay_mult=0.0))
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+lr_config = dict(
+    policy='step',
+    warmup='constant',
+    warmup_iters=500,
+    warmup_ratio=0.3333333333333333,
+    step=[8, 11])
+total_epochs = 12
+checkpoint_config = dict(interval=1)
+log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
+dist_params = dict(backend='nccl')
+log_level = 'INFO'
+load_from = None
+resume_from = None
+workflow = [('train', 1)]
+model = dict(
+    type='FCOS',
+    pretrained='open-mmlab://detectron/resnet50_caffe',
+    backbone=dict(
+        type='ResNet',
+        depth=50,
+        num_stages=4,
+        out_indices=(0, 1, 2, 3),
+        frozen_stages=1,
+        norm_cfg=dict(type='BN', requires_grad=False),
+        norm_eval=True,
+        style='caffe'),
+    neck=dict(
+        type='FPN',
+        in_channels=[256, 512, 1024, 2048],
+        out_channels=256,
+        start_level=1,
+        add_extra_convs=True,
+        extra_convs_on_inputs=False,
+        num_outs=5,
+        relu_before_extra_convs=True),
+    bbox_head=dict(
+        type='FCOSHead',
+        num_classes=10,
+        in_channels=256,
+        stacked_convs=4,
+        feat_channels=256,
+        strides=[8, 16, 32, 64, 128],
+        norm_cfg=None,
+        loss_cls=dict(
+            type='FocalLoss',
+            use_sigmoid=True,
+            gamma=2.0,
+            alpha=0.25,
+            loss_weight=1.0),
+        loss_bbox=dict(type='IoULoss', loss_weight=1.0),
+        loss_centerness=dict(
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0)))
+train_cfg = dict(
+    assigner=dict(
+        type='MaxIoUAssigner',
+        pos_iou_thr=0.5,
+        neg_iou_thr=0.4,
+        min_pos_iou=0,
+        ignore_iof_thr=-1),
+    allowed_border=-1,
+    pos_weight=-1,
+    debug=False)
+test_cfg = dict(
+    nms_pre=1000,
+    min_bbox_size=0,
+    score_thr=0.05,
+    nms=dict(type='nms', iou_threshold=0.5),
+    max_per_img=100)
+work_dir = './work_dirs/fcos_r50_caffe_fpn_4x4_1x_coco'
+gpu_ids = range(0, 1)
+
+2020-10-15 15:02:17,192 - mmdet - INFO - load model from: open-mmlab://detectron/resnet50_caffe
+2020-10-15 15:02:39,455 - mmdet - WARNING - The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: conv1.bias, layer1.0.conv1.bias, layer1.0.conv2.bias, layer1.0.conv3.bias, layer1.0.downsample.0.bias, layer1.1.conv1.bias, layer1.1.conv2.bias, layer1.1.conv3.bias, layer1.2.conv1.bias, layer1.2.conv2.bias, layer1.2.conv3.bias, layer2.0.conv1.bias, layer2.0.conv2.bias, layer2.0.conv3.bias, layer2.0.downsample.0.bias, layer2.1.conv1.bias, layer2.1.conv2.bias, layer2.1.conv3.bias, layer2.2.conv1.bias, layer2.2.conv2.bias, layer2.2.conv3.bias, layer2.3.conv1.bias, layer2.3.conv2.bias, layer2.3.conv3.bias, layer3.0.conv1.bias, layer3.0.conv2.bias, layer3.0.conv3.bias, layer3.0.downsample.0.bias, layer3.1.conv1.bias, layer3.1.conv2.bias, layer3.1.conv3.bias, layer3.2.conv1.bias, layer3.2.conv2.bias, layer3.2.conv3.bias, layer3.3.conv1.bias, layer3.3.conv2.bias, layer3.3.conv3.bias, layer3.4.conv1.bias, layer3.4.conv2.bias, layer3.4.conv3.bias, layer3.5.conv1.bias, layer3.5.conv2.bias, layer3.5.conv3.bias, layer4.0.conv1.bias, layer4.0.conv2.bias, layer4.0.conv3.bias, layer4.0.downsample.0.bias, layer4.1.conv1.bias, layer4.1.conv2.bias, layer4.1.conv3.bias, layer4.2.conv1.bias, layer4.2.conv2.bias, layer4.2.conv3.bias
+
+2020-10-15 15:02:47,360 - mmdet - INFO - Start running, host: root@c29bb9d22aa7, work_dir: /root/userfolder/mmdetection/work_dirs/fcos_r50_caffe_fpn_4x4_1x_coco
+2020-10-15 15:02:47,360 - mmdet - INFO - workflow: [('train', 1)], max: 12 epochs
+2020-10-15 15:04:17,421 - mmdet - INFO - Epoch [1][50/1875]	lr: 3.333e-04, eta: 11:13:54, time: 1.801, data_time: 0.978, memory: 4893, loss_cls: 1.1121, loss_bbox: 4.7489, loss_centerness: 0.6833, loss: 6.5443, grad_norm: 33.1429
+2020-10-15 15:05:25,522 - mmdet - INFO - Epoch [1][100/1875]	lr: 3.333e-04, eta: 9:50:27, time: 1.362, data_time: 0.865, memory: 4893, loss_cls: 1.0041, loss_bbox: 1.0297, loss_centerness: 0.6681, loss: 2.7019, grad_norm: 19.4983
+2020-10-15 15:06:43,453 - mmdet - INFO - Epoch [1][150/1875]	lr: 3.333e-04, eta: 9:46:17, time: 1.559, data_time: 1.024, memory: 4894, loss_cls: 0.7646, loss_bbox: 0.9622, loss_centerness: 0.6596, loss: 2.3864, grad_norm: 24.7722
+2020-10-15 15:07:55,839 - mmdet - INFO - Epoch [1][200/1875]	lr: 3.333e-04, eta: 9:33:14, time: 1.448, data_time: 0.889, memory: 4894, loss_cls: 0.7092, loss_bbox: 0.8961, loss_centerness: 0.6596, loss: 2.2649, grad_norm: 15.3206
+2020-10-15 15:09:07,344 - mmdet - INFO - Epoch [1][250/1875]	lr: 3.333e-04, eta: 9:23:37, time: 1.430, data_time: 0.919, memory: 4894, loss_cls: 0.6573, loss_bbox: 0.8493, loss_centerness: 0.6587, loss: 2.1653, grad_norm: 16.6453
+2020-10-15 15:10:21,116 - mmdet - INFO - Epoch [1][300/1875]	lr: 3.333e-04, eta: 9:19:37, time: 1.475, data_time: 0.961, memory: 4894, loss_cls: 0.6484, loss_bbox: 0.8106, loss_centerness: 0.6573, loss: 2.1163, grad_norm: 14.6034
+2020-10-15 15:11:37,559 - mmdet - INFO - Epoch [1][350/1875]	lr: 3.333e-04, eta: 9:19:13, time: 1.529, data_time: 1.032, memory: 4894, loss_cls: 0.6322, loss_bbox: 0.7555, loss_centerness: 0.6552, loss: 2.0428, grad_norm: 18.4970
+2020-10-15 15:12:56,611 - mmdet - INFO - Epoch [1][400/1875]	lr: 3.333e-04, eta: 9:21:00, time: 1.581, data_time: 1.050, memory: 4894, loss_cls: 0.6386, loss_bbox: 0.7725, loss_centerness: 0.6521, loss: 2.0631, grad_norm: 26.3354
+2020-10-15 15:14:14,466 - mmdet - INFO - Epoch [1][450/1875]	lr: 3.333e-04, eta: 9:21:07, time: 1.557, data_time: 1.020, memory: 4894, loss_cls: 0.6207, loss_bbox: 0.7355, loss_centerness: 0.6480, loss: 2.0042, grad_norm: 23.4342
+2020-10-15 15:15:24,522 - mmdet - INFO - Epoch [1][500/1875]	lr: 3.333e-04, eta: 9:15:14, time: 1.401, data_time: 0.863, memory: 4894, loss_cls: 0.6238, loss_bbox: 0.7092, loss_centerness: 0.6431, loss: 1.9761, grad_norm: 21.9970
+2020-10-15 15:16:32,577 - mmdet - INFO - Epoch [1][550/1875]	lr: 1.000e-03, eta: 9:08:53, time: 1.361, data_time: 0.847, memory: 4894, loss_cls: 0.6277, loss_bbox: 0.9463, loss_centerness: 0.6356, loss: 2.2095, grad_norm: 30.6417
+2020-10-15 15:17:41,631 - mmdet - INFO - Epoch [1][600/1875]	lr: 1.000e-03, eta: 9:04:00, time: 1.381, data_time: 0.863, memory: 4894, loss_cls: 0.6128, loss_bbox: 0.8866, loss_centerness: 0.6274, loss: 2.1269, grad_norm: 26.9834
+2020-10-15 15:18:52,865 - mmdet - INFO - Epoch [1][650/1875]	lr: 1.000e-03, eta: 9:00:55, time: 1.425, data_time: 0.875, memory: 4894, loss_cls: 0.6008, loss_bbox: 0.8736, loss_centerness: 0.6241, loss: 2.0985, grad_norm: 23.6329
+2020-10-15 15:20:07,554 - mmdet - INFO - Epoch [1][700/1875]	lr: 1.000e-03, eta: 8:59:54, time: 1.494, data_time: 0.916, memory: 4894, loss_cls: 0.6027, loss_bbox: 0.8154, loss_centerness: 0.6201, loss: 2.0382, grad_norm: 23.3905
+2020-10-15 15:21:22,768 - mmdet - INFO - Epoch [1][750/1875]	lr: 1.000e-03, eta: 8:59:06, time: 1.504, data_time: 0.917, memory: 4894, loss_cls: 0.5887, loss_bbox: 0.7598, loss_centerness: 0.6180, loss: 1.9665, grad_norm: 19.4344
+2020-10-15 15:22:38,442 - mmdet - INFO - Epoch [1][800/1875]	lr: 1.000e-03, eta: 8:58:27, time: 1.513, data_time: 0.923, memory: 4894, loss_cls: 0.5789, loss_bbox: 0.7524, loss_centerness: 0.6164, loss: 1.9477, grad_norm: 19.6262
+2020-10-15 15:23:53,110 - mmdet - INFO - Epoch [1][850/1875]	lr: 1.000e-03, eta: 8:57:19, time: 1.493, data_time: 0.915, memory: 4894, loss_cls: 0.5699, loss_bbox: 0.6510, loss_centerness: 0.6134, loss: 1.8344, grad_norm: 14.5009
+2020-10-15 15:25:09,113 - mmdet - INFO - Epoch [1][900/1875]	lr: 1.000e-03, eta: 8:56:41, time: 1.520, data_time: 0.910, memory: 4894, loss_cls: 0.5620, loss_bbox: 0.7381, loss_centerness: 0.6134, loss: 1.9135, grad_norm: 18.7589
+2020-10-15 15:26:25,358 - mmdet - INFO - Epoch [1][950/1875]	lr: 1.000e-03, eta: 8:56:05, time: 1.525, data_time: 0.921, memory: 4894, loss_cls: 0.5475, loss_bbox: 0.7020, loss_centerness: 0.6130, loss: 1.8625, grad_norm: 18.5869
+2020-10-15 15:27:45,219 - mmdet - INFO - Exp name: fcos_r50_caffe_fpn_4x4_1x_coco.py
+2020-10-15 15:27:45,220 - mmdet - INFO - Epoch [1][1000/1875]	lr: 1.000e-03, eta: 8:56:43, time: 1.597, data_time: 0.915, memory: 4894, loss_cls: 0.5429, loss_bbox: 0.7581, loss_centerness: 0.6116, loss: 1.9127, grad_norm: 18.7876
+2020-10-15 15:29:04,339 - mmdet - INFO - Epoch [1][1050/1875]	lr: 1.000e-03, eta: 8:56:55, time: 1.582, data_time: 0.922, memory: 4894, loss_cls: 0.5516, loss_bbox: 0.6050, loss_centerness: 0.6094, loss: 1.7659, grad_norm: 12.5498
+2020-10-15 15:30:20,028 - mmdet - INFO - Epoch [1][1100/1875]	lr: 1.000e-03, eta: 8:55:51, time: 1.514, data_time: 0.916, memory: 4894, loss_cls: 0.5348, loss_bbox: 0.6452, loss_centerness: 0.6078, loss: 1.7878, grad_norm: 16.4167
+2020-10-15 15:31:36,769 - mmdet - INFO - Epoch [1][1150/1875]	lr: 1.000e-03, eta: 8:55:06, time: 1.535, data_time: 0.985, memory: 4894, loss_cls: 0.5250, loss_bbox: 0.6019, loss_centerness: 0.6081, loss: 1.7350, grad_norm: 14.2534
+2020-10-15 15:32:55,227 - mmdet - INFO - Epoch [1][1200/1875]	lr: 1.000e-03, eta: 8:54:49, time: 1.569, data_time: 1.060, memory: 4894, loss_cls: 0.5175, loss_bbox: 0.5872, loss_centerness: 0.6076, loss: 1.7123, grad_norm: 13.5937
+2020-10-15 15:34:14,396 - mmdet - INFO - Epoch [1][1250/1875]	lr: 1.000e-03, eta: 8:54:39, time: 1.583, data_time: 1.056, memory: 4894, loss_cls: 0.5048, loss_bbox: 0.5469, loss_centerness: 0.6048, loss: 1.6565, grad_norm: 10.9598
+2020-10-15 15:35:30,691 - mmdet - INFO - Epoch [1][1300/1875]	lr: 1.000e-03, eta: 8:53:37, time: 1.526, data_time: 1.026, memory: 4894, loss_cls: 0.5012, loss_bbox: 0.5990, loss_centerness: 0.6051, loss: 1.7053, grad_norm: 14.1883
+2020-10-15 15:36:44,700 - mmdet - INFO - Epoch [1][1350/1875]	lr: 1.000e-03, eta: 8:51:58, time: 1.480, data_time: 0.931, memory: 4894, loss_cls: 0.5053, loss_bbox: 0.5335, loss_centerness: 0.6055, loss: 1.6443, grad_norm: 10.1728
+2020-10-15 15:38:01,758 - mmdet - INFO - Epoch [1][1400/1875]	lr: 1.000e-03, eta: 8:51:06, time: 1.541, data_time: 1.017, memory: 4894, loss_cls: 0.4962, loss_bbox: 0.5544, loss_centerness: 0.6044, loss: 1.6550, grad_norm: 12.8648
+2020-10-15 15:39:15,228 - mmdet - INFO - Epoch [1][1450/1875]	lr: 1.000e-03, eta: 8:49:21, time: 1.469, data_time: 0.960, memory: 4894, loss_cls: 0.4938, loss_bbox: 0.5083, loss_centerness: 0.6055, loss: 1.6076, grad_norm: 8.5029
+2020-10-15 15:40:30,478 - mmdet - INFO - Epoch [1][1500/1875]	lr: 1.000e-03, eta: 8:48:03, time: 1.505, data_time: 0.943, memory: 4894, loss_cls: 0.4885, loss_bbox: 0.4970, loss_centerness: 0.6051, loss: 1.5906, grad_norm: 8.3345
