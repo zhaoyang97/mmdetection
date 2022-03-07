@@ -1,8 +1,8 @@
 import torch
 
-filename = '../work_dirs/imagenet_resnet50_carafed_3_kernelexp/epoch_100.pth'
-configname = filename.split('/')[2]
-savename = filename.replace('epoch_100.pth', configname+'_pretrained.pth')
+configname = 'epoch_100'
+filename = '../mmclassification/work_dirs/imagenet_mixup/'+ configname + '.pth'
+savename = filename.replace(configname+'.pth', configname+'_pretrained.pth')
 
 
 pretrained_dict = torch.load(filename)

@@ -1,9 +1,8 @@
 dataset_type = 'CocoDataset'
 data_root = 'data/coco/'
 
-annotations_root = 'annotations/'
-image_root = '/root/userfolder/data/TCTAnnotatedData/'
-# image_root = '/home/zhaoyang/container/data/TCTAnnotatedData/'
+annotations_root = '../data/TCT_30000/'
+image_root = '../data/TCT_30000/'
 classes = ('normal', 'ascus', 'asch','lsil', 'hsil_scc_omn', 'agc_adenocarcinoma_em', 'vaginalis', 'monilia','dysbacteriosis_herpes_act', 'ec')
 
 

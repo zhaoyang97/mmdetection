@@ -8,7 +8,9 @@ _base_ = [
 # model settings
 model = dict(
     type='MaskRCNN',
-    pretrained='work_dirs/ipth/imagenet_resnet50_carafed_3_kernelexp_pretrained_ep90.pth',
+    # pretrained='work_dirs/ipth/imagenet_resnet50_carafed_3_kernelexp_pretrained_ep90.pth',
+    pretrained='work_dirs/ipth//imagenet_resnet50_carafed_3_kernelexp_pretrained_ep200.pth',
+
     backbone=dict(
         # type='ResNet',                                  # backbone
         # type='ResNet_carafed',

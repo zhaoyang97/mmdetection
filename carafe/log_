@@ -6,6 +6,8 @@ cd userfolder/mmdetection
 source activate mmclassification
 nvidia-smi
 
+configs/faster_carafe/coco_faster_r50_1x_carafe_3_kernelexp.py
+
 # hpc_lsq
 conda activate pytorch1.6
 
@@ -25,15 +27,22 @@ faster | carafepp | 2x | exp
 faster | carafeh  | 1x         20h
 ========================
 
-## pretrained=carafe_3_kernelexp
+
+pretrained = epoch200
+
+configs/faster_carafe/carafed_coco_faster_r50_1x_3_kernelexp.py          # 4393
+configs/faster_carafe/carafepp_coco_faster_r50_1x_3_kernelexp.py         # 4394
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__BK.py        # 4395
+configs/mask_carafe/carafeppp_coco_mask_r50_1x_3_kernelexp__FPN_MH_BK.py # 4396
+
+===============================================================================
+
+## pretrained=carafe_3_kernelexp | * == softmax(p*x)
 # softmax(p*x) |
 configs/faster_carafe/carafed_coco_faster_r50_1x_3_kernelexp.py          # rtx01        # BK*
 configs/faster_carafe/coco_faster_r50_1x_carafe_3_kernelexp.py           # lsq 4016     # FPN*
 # softmax(p*x) | softmax(p*x)
 configs/faster_carafe/carafepp_coco_faster_r50_1x_3_kernelexp.py         # lsq 4017     # BK*  FPN*
-
-
-
 
 
 
